@@ -1,0 +1,91 @@
+/* ===========================================
+   ESTILOS PARA NAVBAR
+   =========================================== */
+
+/* Navbar dark mode con gradiente */
+.navbar {
+    background: linear-gradient(90deg, #0f172a 0%, #1e293b 100%) !important;
+    box-shadow: 0 2px 8px rgba(30, 41, 59, 0.2);
+    padding: 0.5rem 1rem;
+}
+
+/* Links del navbar */
+.navbar .nav-link {
+    color: #e2e8f0 !important;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    padding: 0.5rem 1rem;
+}
+
+.navbar .nav-link:hover {
+    color: #ffffff !important;
+    opacity: 0.8;
+}
+
+/* Navbar brand */
+.navbar-brand {
+    color: #e2e8f0 !important;
+    transition: all 0.3s ease;
+}
+
+.navbar-brand:hover {
+    opacity: 0.9;
+}
+
+.navbar-brand img {
+    transition: all 0.3s ease;
+}
+
+/* Botón de registrar */
+.navbar .btn-light {
+    background: #f1f5f9 !important;
+    color: #1a5490 !important;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.navbar .btn-light:hover {
+    background: #ffffff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(241, 245, 249, 0.3);
+}
+
+/* Navbar toggler */
+.navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.5);
+    transition: all 0.3s ease;
+}
+
+.navbar-toggler:focus {
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* Ajustes responsive */
+@media (max-width: 992px) {
+    .navbar-collapse {
+        background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+        padding: 1rem;
+        border-radius: 8px;
+        margin-top: 0.5rem;
+    }
+    
+    .navbar .nav-item {
+        margin: 0.25rem 0;
+    }
+    
+    .navbar .btn-light {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+}
+
+/* Espaciado para el contenido debajo del navbar fixed */
+body {
+    padding-top: 80px;
+}
