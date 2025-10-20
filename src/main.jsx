@@ -7,6 +7,8 @@ import './index.css'
 import '/src/style/style.css'
 import Navbar from './components/Navbar'
 import Inicio from './components/Inicio'
+import Login from './components/Login'
+import Registro from './components/Registro'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -15,8 +17,8 @@ createRoot(document.getElementById('root')).render(
       <Routes>
         <Route path="/" element={<Inicio />} />
         <Route path="/comunidad" element={<div>Comunidad</div>} />
-        <Route path="/login" element={<div>Login</div>} />
-        <Route path="/registro" element={<div>Registro</div>} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/registro" element={<Registro />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,
