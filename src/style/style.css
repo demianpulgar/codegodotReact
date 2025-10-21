@@ -229,3 +229,34 @@ footer .fa-reddit:hover {
 footer .fa-discord:hover {
     color: #5865f2 !important;
 }
+
+/* ===========================================
+   ESTILOS PARA PERFIL
+   =========================================== */
+
+/* Perfil - imagen de perfil */
+.rounded-circle {
+    border: 3px solid #1a5490 !important;
+    box-shadow: 0 4px 12px rgba(26, 84, 144, 0.3);
+    transition: all 0.3s ease;
+}
+
+.rounded-circle:hover {
+    box-shadow: 0 6px 20px rgba(26, 84, 144, 0.5);
+    transform: scale(1.05);
+}
+
+/* Campos deshabilitados en perfil */
+.form-control:disabled {
+    background-color: #0f172a !important;
+    border-color: #334155 !important;
+    color: #cbd5e1 !important;
+    opacity: 1;
+}
+
+/* Alert info para perfil */
+.alert-info {
+    background-color: #0ea5e9 !important;
+    color: #fff !important;
+    border-color: #0284c7 !important;
+}
