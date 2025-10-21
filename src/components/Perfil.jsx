@@ -1,4 +1,49 @@
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+
 function Perfil() {
+    const navigate = useNavigate()
+    const [usuario, setUsuario] = useState(null)
+    const [mensaje, setMensaje] = useState({ texto: '', tipo: '' })
+
+    useEffect(() => {
+        // Obtener usuario logueado
+        const usuarioLogeado = localStorage.getItem('usuarioLogeado')
+        
+        if (!usuarioLogeado) {
+            // Si no hay usuario logueado, redirigir al login
+            setMensaje({ 
+                texto: 'Debes iniciar sesión para ver tu perfil.', 
+                tipo: 'warning' 
+            })
+            setTimeout(() => {
+                navigate('/login')
+            }, 2000)
+        } else {
+            setUsuario(JSON.parse(usuarioLogeado))
+        }
+    }, [navigate])
+
+    // Si no hay usuario, mostrar mensaje de carga o redirección
+    if (!usuario) {
+        return (
+            <main className="container py-5" style={{ marginTop: '100px' }}>
+                <div className="row justify-content-center">
+                    <div className="col-lg-6">
+                        {mensaje.texto && (
+                            <div className={`alert alert-${mensaje.tipo}`} role="alert">
+                                {mensaje.texto}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </main>
+        )
+    }
+
+    // Obtener nombre completo
+    const nombreCompleto = `${usuario.nombre || ''} ${usuario.apellidoPaterno || ''} ${usuario.apellidoMaterno || ''}`.trim()
+
     return (
         <main className="container py-5" style={{ marginTop: '100px' }}>
             <div className="row justify-content-center">
@@ -31,7 +76,7 @@ function Perfil() {
                                     <input 
                                         type="text" 
                                         className="form-control" 
-                                        value=""
+                                        value={nombreCompleto}
                                         readOnly
                                         disabled
                                     />
@@ -41,7 +86,7 @@ function Perfil() {
                                     <input 
                                         type="text" 
                                         className="form-control" 
-                                        value=""
+                                        value={usuario.usuario || ''}
                                         readOnly
                                         disabled
                                     />
@@ -54,7 +99,7 @@ function Perfil() {
                                     <input 
                                         type="email" 
                                         className="form-control" 
-                                        value=""
+                                        value={usuario.correo || ''}
                                         readOnly
                                         disabled
                                     />
@@ -64,7 +109,7 @@ function Perfil() {
                                     <input 
                                         type="tel" 
                                         className="form-control" 
-                                        value=""
+                                        value={usuario.telefono || 'No especificado'}
                                         readOnly
                                         disabled
                                     />
