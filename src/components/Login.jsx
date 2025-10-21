@@ -86,6 +86,9 @@ function Login() {
             tipo: 'success' 
         })
         
+        // Disparar evento de actualización para que el Navbar se actualice
+        window.dispatchEvent(new Event('storage'))
+        
         setTimeout(() => {
             navigate('/')
         }, 1200)

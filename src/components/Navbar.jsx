@@ -1,6 +1,32 @@
 import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 
 function Navbar() {
+    const [usuarioLogueado, setUsuarioLogueado] = useState(null)
+
+    useEffect(() => {
+        // Verificar si hay usuario logueado
+        const usuario = localStorage.getItem('usuarioLogeado')
+        if (usuario) {
+            setUsuarioLogueado(JSON.parse(usuario))
+        }
+
+        // Escuchar cambios en localStorage
+        const handleStorageChange = () => {
+            const usuario = localStorage.getItem('usuarioLogeado')
+            setUsuarioLogueado(usuario ? JSON.parse(usuario) : null)
+        }
+
+        window.addEventListener('storage', handleStorageChange)
+        return () => window.removeEventListener('storage', handleStorageChange)
+    }, [])
+
+    const handleLogout = () => {
+        localStorage.removeItem('usuarioLogeado')
+        setUsuarioLogueado(null)
+        window.location.href = '/'
+    }
+
     return (
         <nav className="navbar navbar-expand-lg fixed-top">
             <div className="container-fluid">
@@ -19,12 +45,33 @@ function Navbar() {
                         <li className="nav-item">
                             <Link className="nav-link text-white" to="/comunidad">COMUNIDAD</Link>
                         </li>
-                        <li className="nav-item">
-                            <Link className="nav-link text-white" to="/login">INICIO SESIÓN</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="btn btn-light fw-bold ms-2 px-3" to="/registro" style={{color: '#1a5490'}}>REGISTRAR</Link>
-                        </li>
+                        {usuarioLogueado ? (
+                            <>
+                                <li className="nav-item">
+                                    <Link className="nav-link text-white" to="/perfil">
+                                        <i className="fas fa-user me-1"></i> MI PERFIL
+                                    </Link>
+                                </li>
+                                <li className="nav-item">
+                                    <button 
+                                        className="btn btn-light fw-bold ms-2 px-3" 
+                                        onClick={handleLogout}
+                                        style={{color: '#1a5490'}}
+                                    >
+                                        CERRAR SESIÓN
+                                    </button>
+                                </li>
+                            </>
+                        ) : (
+                            <>
+                                <li className="nav-item">
+                                    <Link className="nav-link text-white" to="/login">INICIO SESIÓN</Link>
+                                </li>
+                                <li className="nav-item">
+                                    <Link className="btn btn-light fw-bold ms-2 px-3" to="/registro" style={{color: '#1a5490'}}>REGISTRAR</Link>
+                                </li>
+                            </>
+                        )}
                     </ul>
                 </div>
             </div>
