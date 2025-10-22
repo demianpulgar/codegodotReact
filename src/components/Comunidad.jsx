@@ -1,7 +1,25 @@
 import { Link } from 'react-router-dom'
+import { useState } from 'react'
 import { codigosData } from '../data/codigosData'
 
 function Comunidad() {
+    const [paginaActual, setPaginaActual] = useState(1)
+    const codigosPorPagina = 9
+    
+    // Calcular índices para la paginación
+    const indiceUltimo = paginaActual * codigosPorPagina
+    const indicePrimero = indiceUltimo - codigosPorPagina
+    const codigosActuales = codigosData.slice(indicePrimero, indiceUltimo)
+    
+    // Calcular número total de páginas
+    const totalPaginas = Math.ceil(codigosData.length / codigosPorPagina)
+    
+    // Cambiar de página
+    const cambiarPagina = (numeroPagina) => {
+        setPaginaActual(numeroPagina)
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+
     return (
         <>
             {/* Header de Comunidad */}
@@ -34,7 +52,7 @@ function Comunidad() {
 
                     {/* Grid de tarjetas */}
                     <div className="row mb-4">
-                        {codigosData.map((codigo) => (
+                        {codigosActuales.map((codigo) => (
                             <div className="col-lg-4 mb-4" key={codigo.id}>
                                 <Link to={`/comunidad/${codigo.id}`} className="text-decoration-none">
                                     <div className="card h-100 shadow-sm card-hover">
@@ -61,6 +79,50 @@ function Comunidad() {
                             </div>
                         ))}
                     </div>
+
+                    {/* Paginación */}
+                    {totalPaginas > 1 && (
+                        <nav className="d-flex justify-content-center mb-5">
+                            <ul className="pagination">
+                                {/* Botón anterior */}
+                                <li className={`page-item ${paginaActual === 1 ? 'disabled' : ''}`}>
+                                    <button 
+                                        className="page-link" 
+                                        onClick={() => cambiarPagina(paginaActual - 1)}
+                                        disabled={paginaActual === 1}
+                                    >
+                                        Anterior
+                                    </button>
+                                </li>
+
+                                {/* Números de página */}
+                                {[...Array(totalPaginas)].map((_, index) => (
+                                    <li 
+                                        key={index + 1} 
+                                        className={`page-item ${paginaActual === index + 1 ? 'active' : ''}`}
+                                    >
+                                        <button 
+                                            className="page-link" 
+                                            onClick={() => cambiarPagina(index + 1)}
+                                        >
+                                            {index + 1}
+                                        </button>
+                                    </li>
+                                ))}
+
+                                {/* Botón siguiente */}
+                                <li className={`page-item ${paginaActual === totalPaginas ? 'disabled' : ''}`}>
+                                    <button 
+                                        className="page-link" 
+                                        onClick={() => cambiarPagina(paginaActual + 1)}
+                                        disabled={paginaActual === totalPaginas}
+                                    >
+                                        Siguiente
+                                    </button>
+                                </li>
+                            </ul>
+                        </nav>
+                    )}
 
                     {/* CTA */}
                     <div className="row">

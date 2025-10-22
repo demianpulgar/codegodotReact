@@ -203,5 +203,283 @@ func _on_options_pressed():
 
 func _on_quit_pressed():
     get_tree().quit()`
+    },
+    {
+        id: 8,
+        titulo: 'Sistema de inventario básico',
+        descripcion: 'Implementación simple de un inventario que permite agregar, eliminar y mostrar items. Incluye slots de inventario con límite de capacidad.',
+        categoria: 'Inventario',
+        fecha: 'Ago 15, 2025',
+        autor: 'Sarah Chen',
+        likes: 73,
+        guardados: 34,
+        codigo: `extends Node
+
+var inventory = []
+var max_slots = 20
+
+func add_item(item):
+    if inventory.size() < max_slots:
+        inventory.append(item)
+        print("Item agregado: ", item)
+        return true
+    else:
+        print("Inventario lleno")
+        return false
+
+func remove_item(item):
+    var index = inventory.find(item)
+    if index != -1:
+        inventory.remove(index)
+        print("Item eliminado: ", item)
+        return true
+    return false
+
+func get_inventory():
+    return inventory`
+    },
+    {
+        id: 9,
+        titulo: 'Efectos de partículas al saltar',
+        descripcion: 'Sistema de partículas que se activa cuando el personaje salta. Añade feedback visual atractivo a las acciones del jugador.',
+        categoria: 'Efectos',
+        fecha: 'Sep 3, 2025',
+        autor: 'codeGodot',
+        likes: 48,
+        guardados: 19,
+        codigo: `extends CharacterBody2D
+
+onready var jump_particles = $JumpParticles
+
+func _physics_process(delta):
+    if Input.is_action_just_pressed("jump") and is_on_floor():
+        velocity.y = JUMP_VELOCITY
+        emit_jump_particles()
+    
+    move_and_slide()
+
+func emit_jump_particles():
+    jump_particles.emitting = true
+    jump_particles.restart()`
+    },
+    {
+        id: 10,
+        titulo: 'Checkpoint de guardado',
+        descripcion: 'Sistema de checkpoints que guarda la posición del jugador. Permite reaparecer en el último checkpoint tocado al morir.',
+        categoria: 'Guardado',
+        fecha: 'Oct 8, 2025',
+        autor: 'Alex Rivera',
+        likes: 62,
+        guardados: 28,
+        codigo: `extends Area2D
+
+var checkpoint_position = Vector2.ZERO
+var is_activated = false
+
+func _ready():
+    connect("body_entered", self, "_on_body_entered")
+
+func _on_body_entered(body):
+    if body.is_in_group("player") and not is_activated:
+        activate_checkpoint(body.global_position)
+
+func activate_checkpoint(pos):
+    checkpoint_position = pos
+    is_activated = true
+    modulate = Color(0, 1, 0)
+    print("Checkpoint activado!")`
+    },
+    {
+        id: 11,
+        titulo: 'Barra de vida animada',
+        descripcion: 'Barra de HP con animación suave al recibir daño o curar. Incluye interpolación para transiciones fluidas y cambio de color según porcentaje.',
+        categoria: 'UI / Interfaz',
+        fecha: 'Nov 12, 2025',
+        autor: 'codeGodot',
+        likes: 55,
+        guardados: 25,
+        codigo: `extends ProgressBar
+
+var health = 100
+var max_health = 100
+
+func _ready():
+    max_value = max_health
+    value = health
+
+func take_damage(amount):
+    health -= amount
+    health = clamp(health, 0, max_health)
+    update_health_bar()
+
+func heal(amount):
+    health += amount
+    health = clamp(health, 0, max_health)
+    update_health_bar()
+
+func update_health_bar():
+    var tween = create_tween()
+    tween.tween_property(self, "value", health, 0.3)
+    update_color()
+
+func update_color():
+    if health < max_health * 0.3:
+        modulate = Color(1, 0, 0)
+    elif health < max_health * 0.6:
+        modulate = Color(1, 1, 0)
+    else:
+        modulate = Color(0, 1, 0)`
+    },
+    {
+        id: 12,
+        titulo: 'Plataformas móviles',
+        descripcion: 'Plataformas que se mueven entre puntos definidos. El jugador se mueve junto con la plataforma de manera suave y realista.',
+        categoria: 'Movimiento',
+        fecha: 'Dic 5, 2025',
+        autor: 'Jake Morrison',
+        likes: 41,
+        guardados: 17,
+        codigo: `extends KinematicBody2D
+
+export var speed = 100.0
+export var move_to = Vector2(200, 0)
+
+var start_position = Vector2.ZERO
+var direction = 1
+
+func _ready():
+    start_position = global_position
+
+func _physics_process(delta):
+    var distance = move_to * direction
+    var velocity = distance.normalized() * speed
+    
+    move_and_slide(velocity)
+    
+    if global_position.distance_to(start_position + move_to) < 5:
+        direction = -1
+    elif global_position.distance_to(start_position) < 5:
+        direction = 1`
+    },
+    {
+        id: 13,
+        titulo: 'Sistema de diálogos',
+        descripcion: 'Sistema completo de diálogos con texto que aparece letra por letra. Incluye opciones de diálogo y manejo de conversaciones.',
+        categoria: 'UI / Interfaz',
+        fecha: 'Ene 20, 2026',
+        autor: 'Maria Santos',
+        likes: 89,
+        guardados: 42,
+        codigo: `extends Control
+
+onready var text_label = $Panel/Label
+onready var timer = $Timer
+
+var dialogue = []
+var current_line = 0
+var char_index = 0
+
+func start_dialogue(lines):
+    dialogue = lines
+    current_line = 0
+    show_next_line()
+
+func show_next_line():
+    if current_line < dialogue.size():
+        text_label.text = ""
+        char_index = 0
+        timer.start(0.05)
+    else:
+        end_dialogue()
+
+func _on_Timer_timeout():
+    if char_index < dialogue[current_line].length():
+        text_label.text += dialogue[current_line][char_index]
+        char_index += 1
+    else:
+        timer.stop()
+
+func next_line():
+    current_line += 1
+    show_next_line()`
+    },
+    {
+        id: 14,
+        titulo: 'Detección de colisiones mejorada',
+        descripcion: 'Sistema avanzado de detección de colisiones con raycast. Permite detectar objetos específicos y obtener información detallada del contacto.',
+        categoria: 'Física',
+        fecha: 'Feb 14, 2026',
+        autor: 'codeGodot',
+        likes: 37,
+        guardados: 14,
+        codigo: `extends RayCast2D
+
+func _physics_process(delta):
+    if is_colliding():
+        var collider = get_collider()
+        var collision_point = get_collision_point()
+        var collision_normal = get_collision_normal()
+        
+        if collider.is_in_group("enemies"):
+            handle_enemy_collision(collider)
+        elif collider.is_in_group("items"):
+            handle_item_collision(collider)
+
+func handle_enemy_collision(enemy):
+    print("Colisión con enemigo: ", enemy.name)
+
+func handle_item_collision(item):
+    print("Item detectado: ", item.name)`
+    },
+    {
+        id: 15,
+        titulo: 'Disparo automático',
+        descripcion: 'Sistema de disparo automático con cooldown. El arma dispara proyectiles continuamente mientras se mantiene presionado el botón.',
+        categoria: 'Combate',
+        fecha: 'Mar 8, 2026',
+        autor: 'Tom Bradley',
+        likes: 68,
+        guardados: 30,
+        codigo: `extends Node2D
+
+var bullet_scene = preload("res://Bullet.tscn")
+var fire_rate = 0.2
+var can_shoot = true
+
+func _process(delta):
+    if Input.is_action_pressed("shoot") and can_shoot:
+        shoot()
+
+func shoot():
+    can_shoot = false
+    var bullet = bullet_scene.instance()
+    bullet.global_position = global_position
+    bullet.rotation = rotation
+    get_tree().current_scene.add_child(bullet)
+    
+    yield(get_tree().create_timer(fire_rate), "timeout")
+    can_shoot = true`
+    },
+    {
+        id: 16,
+        titulo: 'Paralaje de fondo',
+        descripcion: 'Efecto de paralaje para fondos multicapa. Crea profundidad visual moviendo capas a diferentes velocidades según la cámara.',
+        categoria: 'Mundo',
+        fecha: 'Abr 18, 2026',
+        autor: 'Nina Park',
+        likes: 52,
+        guardados: 21,
+        codigo: `extends ParallaxBackground
+
+export var scroll_speed = Vector2(50, 0)
+
+func _process(delta):
+    scroll_offset += scroll_speed * delta
+
+func set_camera_position(camera_pos):
+    for layer in get_children():
+        if layer is ParallaxLayer:
+            var motion = layer.motion_scale
+            layer.motion_offset = camera_pos * (1 - motion)`
     }
 ]
