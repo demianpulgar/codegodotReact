@@ -5,15 +5,85 @@ function DetalleCode() {
     const { id } = useParams()
     const navigate = useNavigate()
 
-    // Datos de ejemplo - en el futuro esto vendrá de una API o base de datos
-    const codigoEjemplo = {
-        id: id,
-        titulo: `Ejemplo de código #${id}`,
-        categoria: 'Movimiento 2D',
-        fecha: 'Oct 12, 2025',
-        autor: 'DevGodot123',
-        descripcion: 'Este código implementa un sistema de movimiento básico para personajes en 2D. Incluye controles suaves, aceleración y desaceleración progresiva para una mejor experiencia de juego.',
-        codigo: `extends CharacterBody2D
+    // Datos completos de todos los códigos
+    const todosLosCodigos = [
+        {
+            id: 1,
+            titulo: 'Configuracion de movimiento de personaje en 2D',
+            descripcion: 'La configuracion de un personaje para moverle es fundamental y lo principal muchos juegos, por eso aqui presentamos un codigo simple para configurar tu personaje.',
+            categoria: 'Movimiento',
+            fecha: 'Oct 12, 2025',
+            autor: 'codeGodot',
+            likes: 42,
+            guardados: 15
+        },
+        {
+            id: 2,
+            titulo: 'Interacion personaje con puertas',
+            descripcion: 'Sistema de interacción que permite al jugador abrir puertas al presionar una tecla. Incluye detección de colisiones y señales para comunicarse con otros objetos del juego.',
+            categoria: 'Interacción',
+            fecha: 'Sep 28, 2025',
+            autor: 'Marcus Johnson',
+            likes: 38,
+            guardados: 12
+        },
+        {
+            id: 3,
+            titulo: 'Ciclo día/noche',
+            descripcion: 'Implementa un sistema dinámico de día y noche que cambia automáticamente la iluminación del juego. Perfecto para crear atmósferas inmersivas y mecánicas temporales.',
+            categoria: 'Mundo',
+            fecha: 'Oct 5, 2025',
+            autor: 'Elena Wong',
+            likes: 56,
+            guardados: 23
+        },
+        {
+            id: 4,
+            titulo: 'Generacion de enemigos basico',
+            descripcion: 'Sistema automático de generación de enemigos con intervalos de tiempo configurables. Spawnnea enemigos en posiciones aleatorias para crear desafíos constantes al jugador.',
+            categoria: 'Combate',
+            fecha: 'Ene 16, 2025',
+            autor: 'codeGodot',
+            likes: 67,
+            guardados: 31
+        },
+        {
+            id: 5,
+            titulo: 'Zoom dinámico',
+            descripcion: 'Control de cámara con zoom suave usando la rueda del mouse. Incluye límites configurables de zoom máximo y mínimo para mantener una experiencia de juego equilibrada.',
+            categoria: 'Cámara',
+            fecha: 'Mar 1, 2025',
+            autor: 'codeGodot',
+            likes: 44,
+            guardados: 18
+        },
+        {
+            id: 6,
+            titulo: 'Musica segun interacciones',
+            descripcion: 'Sistema de audio dinámico que cambia la música de fondo según las acciones del jugador. Incluye transiciones suaves entre diferentes pistas musicales.',
+            categoria: 'Audio',
+            fecha: 'Feb 12, 2025',
+            autor: 'codeGodot',
+            likes: 51,
+            guardados: 22
+        },
+        {
+            id: 7,
+            titulo: 'Menu de inicio',
+            descripcion: 'Interfaz de menú principal completa con botones para iniciar juego, configuraciones y salir. Incluye navegación entre escenas y gestión de eventos de botones.',
+            categoria: 'UI / Interfaz',
+            fecha: 'Jul 30, 2025',
+            autor: 'codeGodot',
+            likes: 39,
+            guardados: 16
+        }
+    ]
+
+    // Buscar el código correspondiente al ID
+    const codigoEjemplo = todosLosCodigos.find(codigo => codigo.id === parseInt(id)) || todosLosCodigos[0]
+
+    // Código de ejemplo (mismo para todos por ahora)
+    const codigoGDScript = `extends CharacterBody2D
 
 # Velocidad del personaje
 const SPEED = 300.0
@@ -38,31 +108,30 @@ func _physics_process(delta):
     else:
         velocity.x = move_toward(velocity.x, 0, SPEED)
 
-    move_and_slide()`,
-        likes: 42,
-        guardados: 15,
-        comentarios: [
-            {
-                id: 1,
-                autor: 'GamerDev',
-                fecha: 'Oct 13, 2025',
-                texto: '¡Excelente código! Me funcionó perfecto para mi plataformer.'
-            },
-            {
-                id: 2,
-                autor: 'CodeMaster',
-                fecha: 'Oct 14, 2025',
-                texto: '¿Podrías agregar un ejemplo con doble salto?'
-            }
-        ]
-    }
+    move_and_slide()`
+
+    // Comentarios de ejemplo
+    const comentariosEjemplo = [
+        {
+            id: 1,
+            autor: 'GamerDev',
+            fecha: 'Oct 13, 2025',
+            texto: '¡Excelente código! Me funcionó perfecto para mi plataformer.'
+        },
+        {
+            id: 2,
+            autor: 'CodeMaster',
+            fecha: 'Oct 14, 2025',
+            texto: '¿Podrías agregar un ejemplo con doble salto?'
+        }
+    ]
 
     const [nuevoComentario, setNuevoComentario] = useState('')
     const [liked, setLiked] = useState(false)
     const [saved, setSaved] = useState(false)
 
     const copiarCodigo = () => {
-        navigator.clipboard.writeText(codigoEjemplo.codigo)
+        navigator.clipboard.writeText(codigoGDScript)
         alert('Código copiado al portapapeles!')
     }
 
@@ -137,13 +206,13 @@ func _physics_process(delta):
                         </button>
                     </div>
                     <pre className="code-content">
-                        <code>{codigoEjemplo.codigo}</code>
+                        <code>{codigoGDScript}</code>
                     </pre>
                 </div>
 
                 {/* Sección de comentarios */}
                 <div className="comments-section">
-                    <h4 className="fw-bold mb-4">Comentarios ({codigoEjemplo.comentarios.length})</h4>
+                    <h4 className="fw-bold mb-4">Comentarios ({comentariosEjemplo.length})</h4>
                     
                     {/* Formulario nuevo comentario */}
                     <form onSubmit={handleSubmitComentario} className="mb-4">
@@ -161,7 +230,7 @@ func _physics_process(delta):
 
                     {/* Lista de comentarios */}
                     <div className="comments-list">
-                        {codigoEjemplo.comentarios.map((comentario) => (
+                        {comentariosEjemplo.map((comentario) => (
                             <div key={comentario.id} className="comment-item mb-3">
                                 <div className="d-flex gap-2">
                                     <img 
