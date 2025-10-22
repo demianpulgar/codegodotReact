@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import Logo from '../assets/Logo.png'
 
 function Perfil() {
     const navigate = useNavigate()
@@ -56,7 +57,7 @@ function Perfil() {
                             <div className="text-center mb-4">
                                 <div className="d-inline-block position-relative">
                                     <img 
-                                        src="/src/assets/Logo.png" 
+                                        src={Logo} 
                                         alt="Foto de perfil" 
                                         className="rounded-circle border border-3"
                                         style={{ 

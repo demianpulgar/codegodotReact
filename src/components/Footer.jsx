@@ -1,4 +1,9 @@
 import { Link } from 'react-router-dom'
+import Logo from '../assets/Logo.png'
+import Instagram from '../assets/instagram.png'
+import X from '../assets/x.png'
+import Reddit from '../assets/reddit.png'
+import Discord from '../assets/discordia.png'
 
 function Footer() {
     return (
@@ -6,20 +11,20 @@ function Footer() {
             <div className="container">
                 <div className="row">
                     <div className="col-lg-3 mb-4">
-                        <img src="/src/assets/Logo.png" alt="CodeGodot Logo" className="footer-logo" />
+                        <img src={Logo} alt="CodeGodot Logo" className="footer-logo" />
                         <p className="mt-3 footer-text">Tu fuente para obtener codigo optimizado de godot y ahorrar tu tiempo :)</p>
                         <div className="d-flex">
                             <a href="#" className="text-white me-3">
-                                <img src="/src/assets/instagram.png" alt="Instagram" className="social-icon" />
+                                <img src={Instagram} alt="Instagram" className="social-icon" />
                             </a>
                             <a href="#" className="text-white me-3">
-                                <img src="/src/assets/x.png" alt="Twitter/X" className="social-icon" />
+                                <img src={X} alt="Twitter/X" className="social-icon" />
                             </a>
                             <a href="#" className="text-white me-3">
-                                <img src="/src/assets/reddit.png" alt="Reddit" className="social-icon" />
+                                <img src={Reddit} alt="Reddit" className="social-icon" />
                             </a>
                             <a href="#" className="text-white">
-                                <img src="/src/assets/discordia.png" alt="Discord" className="social-icon" />
+                                <img src={Discord} alt="Discord" className="social-icon" />
                             </a>
                         </div>
                     </div>

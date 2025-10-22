@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom'
+import Logo from '../assets/Logo.png'
+import Godot from '../assets/Godot.png'
 
 function Inicio() {
     return (
@@ -46,7 +48,7 @@ function Inicio() {
                         </div>
                         <div className="col-lg-6 text-center">
                             <div className="d-flex align-items-center justify-content-center">
-                                <img className="navbar-brand" src="/src/assets/Logo.png" alt="CodeGodot Logo" />
+                                <img className="navbar-brand" src={Logo} alt="CodeGodot Logo" />
                                 <h3 className="fw-bold"></h3>
                             </div>
                         </div>
@@ -74,7 +76,7 @@ function Inicio() {
                             </p>
                         </div>
                         <div className="col-lg-5 text-center">
-                            <img src="/src/assets/Godot.png" alt="Godot Engine" className="img-fluid" />
+                            <img src={Godot} alt="Godot Engine" className="img-fluid" />
                         </div>
                     </div>
                 </div>

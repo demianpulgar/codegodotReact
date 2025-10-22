@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
+import Logo from '../assets/Logo.png'
 
 function Navbar() {
     const [usuarioLogueado, setUsuarioLogueado] = useState(null)
@@ -31,8 +32,8 @@ function Navbar() {
         <nav className="navbar navbar-expand-lg fixed-top">
             <div className="container-fluid">
                 <Link className="navbar-brand" to="/">
-                    <img src="/src/assets/Logo.png" alt="CodeGodot Logo" className="d-none d-md-block" style={{height: '60px', width: 'auto'}} />
-                    <img src="/src/assets/Logo.png" alt="CodeGodot Logo" className="d-md-none" style={{height: '40px', width: 'auto'}} />
+                    <img src={Logo} alt="CodeGodot Logo" className="d-none d-md-block" style={{height: '60px', width: 'auto'}} />
+                    <img src={Logo} alt="CodeGodot Logo" className="d-md-none" style={{height: '40px', width: 'auto'}} />
                 </Link>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span className="navbar-toggler-icon"></span>

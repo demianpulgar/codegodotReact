@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import { codigosData } from '../data/codigosData'
+import decoracionComunidad from '../assets/decoracionComunidad.png'
 
 function Comunidad() {
     const [paginaActual, setPaginaActual] = useState(1)
@@ -57,7 +58,7 @@ function Comunidad() {
                                 <Link to={`/comunidad/${codigo.id}`} className="text-decoration-none">
                                     <div className="card h-100 shadow-sm card-hover">
                                         <div className="card-img-top d-flex align-items-center justify-content-center card-img-container">
-                                            <img src="/src/assets/decoracionComunidad.png" alt="Godot Code" className="card-img-code" />
+                                            <img src={decoracionComunidad} alt="Godot Code" className="card-img-code" />
                                         </div>
                                         <div className="card-body">
                                             <div className="d-flex justify-content-between align-items-center mb-2">
@@ -132,7 +133,7 @@ function Comunidad() {
                             <button className="btn btn-light fw-bold px-4 py-2">Contactar</button>
                         </div>
                         <div className="col-lg-6 text-center">
-                            <img src="/src/assets/decoracionComunidad.png" alt="Community" className="cta-image" />
+                            <img src={decoracionComunidad} alt="Community" className="cta-image" />
                         </div>
                     </div>
                 </div>

@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { codigosData } from '../data/codigosData'
+import Logo from '../assets/Logo.png'
 
 function DetalleCode() {
     const { id } = useParams()
@@ -79,7 +80,7 @@ function DetalleCode() {
                     {/* Autor */}
                     <div className="d-flex align-items-center gap-2 mb-3">
                         <img 
-                            src="/src/assets/Logo.png" 
+                            src={Logo} 
                             alt={codigoActual.autor}
                             className="rounded-circle autor-avatar"
                         />
@@ -133,7 +134,7 @@ function DetalleCode() {
                             <div key={comentario.id} className="comment-item mb-3">
                                 <div className="d-flex gap-2">
                                     <img 
-                                        src="/src/assets/Logo.png" 
+                                        src={Logo} 
                                         alt={comentario.autor}
                                         className="rounded-circle autor-avatar"
                                     />
