@@ -7,6 +7,7 @@ import '/src/style/style.css'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import Inicio from './components/Inicio'
+import Comunidad from './components/Comunidad'
 import Login from './components/Login'
 import Registro from './components/Registro'
 import Perfil from './components/Perfil'
@@ -17,7 +18,7 @@ createRoot(document.getElementById('root')).render(
       <Navbar />
       <Routes>
         <Route path="/" element={<Inicio />} />
-        <Route path="/comunidad" element={<div>Comunidad</div>} />
+        <Route path="/comunidad" element={<Comunidad />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
         <Route path="/perfil" element={<Perfil />} />
