@@ -113,8 +113,7 @@ func _physics_process(delta):
                         <img 
                             src="/src/assets/Logo.png" 
                             alt={codigoEjemplo.autor}
-                            className="rounded-circle"
-                            style={{width: '40px', height: '40px', objectFit: 'cover'}}
+                            className="rounded-circle autor-avatar"
                         />
                         <div>
                             <p className="mb-0 fw-bold">{codigoEjemplo.autor}</p>
@@ -168,8 +167,7 @@ func _physics_process(delta):
                                     <img 
                                         src="/src/assets/Logo.png" 
                                         alt={comentario.autor}
-                                        className="rounded-circle"
-                                        style={{width: '40px', height: '40px', objectFit: 'cover'}}
+                                        className="rounded-circle autor-avatar"
                                     />
                                     <div className="flex-grow-1">
                                         <div className="d-flex justify-content-between align-items-start">

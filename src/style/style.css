@@ -116,6 +116,25 @@ footer {
     font-size: 0.95rem;
 }
 
+footer .footer-logo {
+    height: 50px;
+    filter: brightness(0) invert(1);
+}
+
+footer .footer-text {
+    font-size: 0.9em;
+}
+
+footer .social-icon {
+    height: 24px;
+    filter: brightness(0) invert(1);
+    transition: transform 0.3s ease;
+}
+
+footer .social-icon:hover {
+    transform: scale(1.2);
+}
+
 /* Links */
 a {
     color: #38bdf8 !important; /* sky-400 */
@@ -360,6 +379,29 @@ footer .fa-discord:hover {
    ESTILOS PARA COMUNIDAD
    =========================================== */
 
+.comunidad-header {
+    background-color: #1e293b !important;
+    padding-top: 120px;
+    padding-bottom: 3rem;
+}
+
+.comunidad-section {
+    background-color: #0f172a !important;
+    padding: 4rem 0;
+}
+
+.card-img-container {
+    height: 200px;
+}
+
+.card-img-code {
+    max-height: 150px;
+}
+
+.cta-image {
+    max-width: 300px;
+}
+
 /* Cards con hover effect */
 .card-hover {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -464,4 +506,11 @@ footer .fa-discord:hover {
 
 .comment-item .fw-bold {
     color: #f1f5f9 !important;
+}
+
+.autor-avatar {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border: 2px solid #334155 !important;
 }

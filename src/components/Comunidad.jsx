@@ -4,7 +4,7 @@ function Comunidad() {
     return (
         <>
             {/* Header de Comunidad */}
-            <section className="py-5 bg-light" style={{ paddingTop: '120px' }}>
+            <section className="comunidad-header">
                 <div className="container text-center">
                     <h1 className="fw-bold mb-3">Comunidad</h1>
                     <p className="mb-4">
@@ -27,7 +27,7 @@ function Comunidad() {
             </section>
 
             {/* Sección de Códigos */}
-            <section className="py-5 bg-light">
+            <section className="comunidad-section">
                 <div className="container">
                     <h2 className="fw-bold mb-4">Códigos</h2>
 
@@ -37,8 +37,8 @@ function Comunidad() {
                             <div className="col-lg-4 mb-4" key={i}>
                                 <Link to={`/comunidad/${i + 1}`} className="text-decoration-none">
                                     <div className="card h-100 shadow-sm card-hover">
-                                        <div className="card-img-top d-flex align-items-center justify-content-center" style={{ height: 200 }}>
-                                            <img src="/src/assets/decoracionComunidad.png" alt="Godot Code" style={{ maxHeight: 150 }} />
+                                        <div className="card-img-top d-flex align-items-center justify-content-center card-img-container">
+                                            <img src="/src/assets/decoracionComunidad.png" alt="Godot Code" className="card-img-code" />
                                         </div>
                                         <div className="card-body">
                                             <div className="d-flex justify-content-between align-items-center mb-2">
@@ -69,7 +69,7 @@ function Comunidad() {
                             <button className="btn btn-light fw-bold px-4 py-2">Contactar</button>
                         </div>
                         <div className="col-lg-6 text-center">
-                            <img src="/src/assets/decoracionComunidad.png" alt="Community" style={{ maxWidth: 300 }} />
+                            <img src="/src/assets/decoracionComunidad.png" alt="Community" className="cta-image" />
                         </div>
                     </div>
                 </div>
