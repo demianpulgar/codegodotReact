@@ -1,114 +1,13 @@
-import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
+import { codigosData } from '../data/codigosData'
 
 function DetalleCode() {
     const { id } = useParams()
     const navigate = useNavigate()
 
-    // Datos completos de todos los códigos
-    const todosLosCodigos = [
-        {
-            id: 1,
-            titulo: 'Configuracion de movimiento de personaje en 2D',
-            descripcion: 'La configuracion de un personaje para moverle es fundamental y lo principal muchos juegos, por eso aqui presentamos un codigo simple para configurar tu personaje.',
-            categoria: 'Movimiento',
-            fecha: 'Oct 12, 2025',
-            autor: 'codeGodot',
-            likes: 42,
-            guardados: 15
-        },
-        {
-            id: 2,
-            titulo: 'Interacion personaje con puertas',
-            descripcion: 'Sistema de interacción que permite al jugador abrir puertas al presionar una tecla. Incluye detección de colisiones y señales para comunicarse con otros objetos del juego.',
-            categoria: 'Interacción',
-            fecha: 'Sep 28, 2025',
-            autor: 'Marcus Johnson',
-            likes: 38,
-            guardados: 12
-        },
-        {
-            id: 3,
-            titulo: 'Ciclo día/noche',
-            descripcion: 'Implementa un sistema dinámico de día y noche que cambia automáticamente la iluminación del juego. Perfecto para crear atmósferas inmersivas y mecánicas temporales.',
-            categoria: 'Mundo',
-            fecha: 'Oct 5, 2025',
-            autor: 'Elena Wong',
-            likes: 56,
-            guardados: 23
-        },
-        {
-            id: 4,
-            titulo: 'Generacion de enemigos basico',
-            descripcion: 'Sistema automático de generación de enemigos con intervalos de tiempo configurables. Spawnnea enemigos en posiciones aleatorias para crear desafíos constantes al jugador.',
-            categoria: 'Combate',
-            fecha: 'Ene 16, 2025',
-            autor: 'codeGodot',
-            likes: 67,
-            guardados: 31
-        },
-        {
-            id: 5,
-            titulo: 'Zoom dinámico',
-            descripcion: 'Control de cámara con zoom suave usando la rueda del mouse. Incluye límites configurables de zoom máximo y mínimo para mantener una experiencia de juego equilibrada.',
-            categoria: 'Cámara',
-            fecha: 'Mar 1, 2025',
-            autor: 'codeGodot',
-            likes: 44,
-            guardados: 18
-        },
-        {
-            id: 6,
-            titulo: 'Musica segun interacciones',
-            descripcion: 'Sistema de audio dinámico que cambia la música de fondo según las acciones del jugador. Incluye transiciones suaves entre diferentes pistas musicales.',
-            categoria: 'Audio',
-            fecha: 'Feb 12, 2025',
-            autor: 'codeGodot',
-            likes: 51,
-            guardados: 22
-        },
-        {
-            id: 7,
-            titulo: 'Menu de inicio',
-            descripcion: 'Interfaz de menú principal completa con botones para iniciar juego, configuraciones y salir. Incluye navegación entre escenas y gestión de eventos de botones.',
-            categoria: 'UI / Interfaz',
-            fecha: 'Jul 30, 2025',
-            autor: 'codeGodot',
-            likes: 39,
-            guardados: 16
-        }
-    ]
-
     // Buscar el código correspondiente al ID
-    const codigoEjemplo = todosLosCodigos.find(codigo => codigo.id === parseInt(id)) || todosLosCodigos[0]
-
-    // Código de ejemplo (mismo para todos por ahora)
-    const codigoGDScript = `extends CharacterBody2D
-
-# Velocidad del personaje
-const SPEED = 300.0
-const JUMP_VELOCITY = -400.0
-
-# Get the gravity from the project settings to be synced with RigidBody nodes.
-var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
-
-func _physics_process(delta):
-    # Add the gravity.
-    if not is_on_floor():
-        velocity.y += gravity * delta
-
-    # Handle jump.
-    if Input.is_action_just_pressed("ui_accept") and is_on_floor():
-        velocity.y = JUMP_VELOCITY
-
-    # Get the input direction and handle the movement/deceleration.
-    var direction = Input.get_axis("ui_left", "ui_right")
-    if direction:
-        velocity.x = direction * SPEED
-    else:
-        velocity.x = move_toward(velocity.x, 0, SPEED)
-
-    move_and_slide()`
+    const codigoActual = codigosData.find(codigo => codigo.id === parseInt(id)) || codigosData[0]
 
     // Comentarios de ejemplo
     const comentariosEjemplo = [
@@ -131,7 +30,7 @@ func _physics_process(delta):
     const [saved, setSaved] = useState(false)
 
     const copiarCodigo = () => {
-        navigator.clipboard.writeText(codigoGDScript)
+        navigator.clipboard.writeText(codigoActual.codigo)
         alert('Código copiado al portapapeles!')
     }
 
@@ -155,10 +54,10 @@ func _physics_process(delta):
                 <div className="code-header mb-4">
                     <div className="d-flex justify-content-between align-items-start mb-3">
                         <div>
-                            <h1 className="fw-bold mb-2">{codigoEjemplo.titulo}</h1>
+                            <h1 className="fw-bold mb-2">{codigoActual.titulo}</h1>
                             <div className="d-flex gap-3">
-                                <span className="badge bg-primary">{codigoEjemplo.categoria}</span>
-                                <span className="text-muted">{codigoEjemplo.fecha}</span>
+                                <span className="badge bg-primary">{codigoActual.categoria}</span>
+                                <span className="text-muted">{codigoActual.fecha}</span>
                             </div>
                         </div>
                         <div className="d-flex gap-2">
@@ -166,7 +65,7 @@ func _physics_process(delta):
                                 className={`btn ${liked ? 'btn-danger' : 'btn-outline-danger'}`}
                                 onClick={() => setLiked(!liked)}
                             >
-                                <i className="far fa-heart"></i> {codigoEjemplo.likes + (liked ? 1 : 0)}
+                                <i className="far fa-heart"></i> {codigoActual.likes + (liked ? 1 : 0)}
                             </button>
                             <button 
                                 className={`btn ${saved ? 'btn-warning' : 'btn-outline-warning'}`}
@@ -181,11 +80,11 @@ func _physics_process(delta):
                     <div className="d-flex align-items-center gap-2 mb-3">
                         <img 
                             src="/src/assets/Logo.png" 
-                            alt={codigoEjemplo.autor}
+                            alt={codigoActual.autor}
                             className="rounded-circle autor-avatar"
                         />
                         <div>
-                            <p className="mb-0 fw-bold">{codigoEjemplo.autor}</p>
+                            <p className="mb-0 fw-bold">{codigoActual.autor}</p>
                             <small className="text-muted">Desarrollador verificado</small>
                         </div>
                     </div>
@@ -194,7 +93,7 @@ func _physics_process(delta):
                 {/* Descripción */}
                 <div className="code-description mb-4">
                     <h4 className="fw-bold mb-3">Descripción</h4>
-                    <p>{codigoEjemplo.descripcion}</p>
+                    <p>{codigoActual.descripcion}</p>
                 </div>
 
                 {/* Bloque de código */}
@@ -206,7 +105,7 @@ func _physics_process(delta):
                         </button>
                     </div>
                     <pre className="code-content">
-                        <code>{codigoGDScript}</code>
+                        <code>{codigoActual.codigo}</code>
                     </pre>
                 </div>
 
