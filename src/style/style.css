@@ -392,14 +392,20 @@ footer .fa-discord:hover {
 
 .card-img-container {
     height: 200px;
+    overflow: hidden;
+    background-color: #0f172a;
+    border-bottom: 1px solid #334155;
 }
 
 .card-img-code {
-    max-height: 150px;
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
 }
 
 .cta-image {
-    max-width: 300px;
+    max-width: 100%;
+    height: auto;
 }
 
 /* Cards con hover effect */
