@@ -385,9 +385,25 @@ footer .fa-discord:hover {
     padding-bottom: 3rem;
 }
 
+.comunidad-header h1 {
+    color: #f1f5f9 !important;
+}
+
+.comunidad-header p {
+    color: #cbd5e1 !important;
+}
+
 .comunidad-section {
     background-color: #0f172a !important;
     padding: 4rem 0;
+}
+
+.comunidad-section h2 {
+    color: #f1f5f9 !important;
+}
+
+.comunidad-section p {
+    color: #cbd5e1 !important;
 }
 
 .card-img-container {
@@ -426,6 +442,14 @@ footer .fa-discord:hover {
 
 .card-hover .card-title {
     color: #f1f5f9 !important;
+}
+
+.card-hover .card-text {
+    color: #cbd5e1 !important;
+}
+
+.card-hover small {
+    color: #94a3b8 !important;
 }
 
 /* ===========================================
