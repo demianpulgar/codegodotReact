@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import '/src/style/style.css'
 import Navbar from './components/Navbar'
+import Footer from './components/Footer'
 import Inicio from './components/Inicio'
 import Login from './components/Login'
 import Registro from './components/Registro'
@@ -21,6 +22,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/registro" element={<Registro />} />
         <Route path="/perfil" element={<Perfil />} />
       </Routes>
+      <Footer />
     </BrowserRouter>
   </StrictMode>,
 )
