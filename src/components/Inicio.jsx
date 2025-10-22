@@ -10,10 +10,10 @@ function Inicio() {
                 <div className="container min-vh-100">
                     <div className="row min-vh-100 py-5">
                         {/* Columna de contenido (izquierda) */}
-                        <div className="col-12 col-lg-6 d-flex flex-column justify-content-center text-center">
+                        <div className="col-12 col-lg-6 d-flex flex-column justify-content-center text-center text-lg-start">
                             <h1 className="display-4 fw-bold mb-4">Copiar y pegar</h1>
                             <p className="lead mb-4">Una experiencia agradable, fácil uso y ahorro de tiempo.<br/>CodeGodot es una página que te ayudará ahorrar tiempo y ayudando al aprendizaje con la rápida adquisición de código fácil y rápido que entregamos para tu proyecto de godot :)</p>
-                            <div>
+                            <div className="d-flex gap-2 flex-column flex-sm-row justify-content-center justify-content-lg-start">
                                 <Link to="/comunidad" className="btn btn-light fw-bold px-4 py-2">Comenzar</Link>
                             </div>
                         </div>

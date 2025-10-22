@@ -35,10 +35,10 @@ function Comunidad() {
 
                     {/* Sección de búsqueda */}
                     <div className="row justify-content-center mb-4">
-                        <div className="col-md-6">
-                            <div className="d-flex">
-                                <input type="text" className="form-control me-2" placeholder="Buscar códigos..." />
-                                <button className="btn me-2 btn-light">Filtros</button>
+                        <div className="col-12 col-md-8 col-lg-6">
+                            <div className="d-flex flex-column flex-sm-row gap-2">
+                                <input type="text" className="form-control flex-grow-1" placeholder="Buscar códigos..." />
+                                <button className="btn btn-light">Filtros</button>
                                 <button className="btn btn-light">Buscar</button>
                             </div>
                         </div>
@@ -54,20 +54,20 @@ function Comunidad() {
                     {/* Grid de tarjetas */}
                     <div className="row mb-4">
                         {codigosActuales.map((codigo) => (
-                            <div className="col-lg-4 mb-4" key={codigo.id}>
+                            <div className="col-12 col-sm-6 col-lg-4 mb-4" key={codigo.id}>
                                 <Link to={`/comunidad/${codigo.id}`} className="text-decoration-none">
                                     <div className="card h-100 shadow-sm card-hover">
                                         <div className="card-img-top d-flex align-items-center justify-content-center card-img-container">
                                             <img src={decoracionComunidad} alt="Godot Code" className="card-img-code" />
                                         </div>
                                         <div className="card-body">
-                                            <div className="d-flex justify-content-between align-items-center mb-2">
+                                            <div className="d-flex justify-content-between align-items-center mb-2 flex-wrap">
                                                 <small className="text-muted">{codigo.categoria}</small>
                                                 <small className="text-muted">{codigo.fecha}</small>
                                             </div>
                                             <h5 className="card-title fw-bold">{codigo.titulo}</h5>
                                             <p className="card-text text-muted">{codigo.descripcion}</p>
-                                            <div className="d-flex justify-content-between align-items-center">
+                                            <div className="d-flex justify-content-between align-items-center flex-wrap gap-2">
                                                 <small className="text-muted">{codigo.autor}</small>
                                                 <div>
                                                     <span className="me-2"><i className="far fa-heart"></i> {codigo.likes}</span>

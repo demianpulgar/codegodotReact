@@ -22,7 +22,21 @@ function Navbar() {
         return () => window.removeEventListener('storage', handleStorageChange)
     }, [])
 
+    // Función para cerrar el navbar móvil
+    const cerrarNavbar = () => {
+        const navbarCollapse = document.getElementById('navbarNav')
+        if (navbarCollapse && navbarCollapse.classList.contains('show')) {
+            const bsCollapse = window.bootstrap.Collapse.getInstance(navbarCollapse)
+            if (bsCollapse) {
+                bsCollapse.hide()
+            } else {
+                navbarCollapse.classList.remove('show')
+            }
+        }
+    }
+
     const handleLogout = () => {
+        cerrarNavbar()
         localStorage.removeItem('usuarioLogeado')
         setUsuarioLogueado(null)
         window.location.href = '/'
@@ -41,15 +55,15 @@ function Navbar() {
                 <div className="collapse navbar-collapse" id="navbarNav">
                     <ul className="navbar-nav ms-auto">
                         <li className="nav-item">
-                            <Link className="nav-link text-white" to="/">INICIO</Link>
+                            <Link className="nav-link text-white" to="/" onClick={cerrarNavbar}>INICIO</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link text-white" to="/comunidad">COMUNIDAD</Link>
+                            <Link className="nav-link text-white" to="/comunidad" onClick={cerrarNavbar}>COMUNIDAD</Link>
                         </li>
                         {usuarioLogueado ? (
                             <>
                                 <li className="nav-item">
-                                    <Link className="nav-link text-white" to="/perfil">
+                                    <Link className="nav-link text-white" to="/perfil" onClick={cerrarNavbar}>
                                         <i className="fas fa-user me-1"></i> MI PERFIL
                                     </Link>
                                 </li>
@@ -66,10 +80,10 @@ function Navbar() {
                         ) : (
                             <>
                                 <li className="nav-item">
-                                    <Link className="nav-link text-white" to="/login">INICIO SESIÓN</Link>
+                                    <Link className="nav-link text-white" to="/login" onClick={cerrarNavbar}>INICIO SESIÓN</Link>
                                 </li>
                                 <li className="nav-item">
-                                    <Link className="btn btn-light fw-bold ms-2 px-3" to="/registro" style={{color: '#1a5490'}}>REGISTRAR</Link>
+                                    <Link className="btn btn-light fw-bold ms-2 px-3" to="/registro" style={{color: '#1a5490'}} onClick={cerrarNavbar}>REGISTRAR</Link>
                                 </li>
                             </>
                         )}

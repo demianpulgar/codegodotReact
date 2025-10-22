@@ -53,23 +53,23 @@ function DetalleCode() {
 
                 {/* Header del código */}
                 <div className="code-header mb-4">
-                    <div className="d-flex justify-content-between align-items-start mb-3">
-                        <div>
+                    <div className="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-3">
+                        <div className="w-100">
                             <h1 className="fw-bold mb-2">{codigoActual.titulo}</h1>
-                            <div className="d-flex gap-3">
+                            <div className="d-flex flex-wrap gap-3">
                                 <span className="badge bg-primary">{codigoActual.categoria}</span>
                                 <span className="text-muted">{codigoActual.fecha}</span>
                             </div>
                         </div>
-                        <div className="d-flex gap-2">
+                        <div className="d-flex gap-2 flex-shrink-0">
                             <button 
-                                className={`btn ${liked ? 'btn-danger' : 'btn-outline-danger'}`}
+                                className={`btn btn-sm ${liked ? 'btn-danger' : 'btn-outline-danger'}`}
                                 onClick={() => setLiked(!liked)}
                             >
                                 <i className="far fa-heart"></i> {codigoActual.likes + (liked ? 1 : 0)}
                             </button>
                             <button 
-                                className={`btn ${saved ? 'btn-warning' : 'btn-outline-warning'}`}
+                                className={`btn btn-sm ${saved ? 'btn-warning' : 'btn-outline-warning'}`}
                                 onClick={() => setSaved(!saved)}
                             >
                                 <i className="far fa-bookmark"></i>

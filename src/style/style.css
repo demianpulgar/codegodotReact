@@ -579,3 +579,174 @@ footer .fa-discord:hover {
     object-fit: cover;
     border: 2px solid #334155 !important;
 }
+
+/* ===========================================
+   MEDIA QUERIES - RESPONSIVE DESIGN
+   =========================================== */
+
+/* Tablets y dispositivos medianos */
+@media (max-width: 768px) {
+    /* Navbar */
+    .navbar-collapse {
+        background-color: #1a5490;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-top: 1rem;
+    }
+    
+    .navbar-nav .nav-item {
+        text-align: center;
+        padding: 0.5rem 0;
+    }
+    
+    .navbar-nav .btn {
+        width: 100%;
+        margin: 0.5rem 0 !important;
+    }
+    
+    /* Inicio - Hero */
+    .hero-content h1 {
+        font-size: 2rem !important;
+    }
+    
+    .hero-content p {
+        font-size: 1rem !important;
+    }
+    
+    /* Comunidad - Cards */
+    .code-card {
+        margin-bottom: 1.5rem;
+    }
+    
+    /* DetalleCode */
+    .code-header {
+        padding: 1.5rem 1rem;
+    }
+    
+    .code-header h1 {
+        font-size: 1.5rem !important;
+    }
+    
+    .code-block,
+    .code-description,
+    .comments-section {
+        padding: 1rem;
+    }
+    
+    .code-content {
+        font-size: 0.8rem;
+        padding: 1rem;
+    }
+    
+    /* Perfil */
+    .perfil-container .card {
+        padding: 1.5rem 1rem;
+    }
+    
+    .perfil-container h2 {
+        font-size: 1.5rem !important;
+    }
+    
+    /* Footer */
+    .footer-content {
+        text-align: center;
+    }
+    
+    .footer-links {
+        flex-direction: column;
+        gap: 1rem;
+    }
+}
+
+/* Móviles pequeños */
+@media (max-width: 576px) {
+    /* Padding general */
+    .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    /* Hero */
+    .hero-content h1 {
+        font-size: 1.5rem !important;
+    }
+    
+    .hero-content .btn {
+        width: 100%;
+        margin: 0.5rem 0;
+    }
+    
+    /* Cards en Comunidad */
+    .code-card {
+        padding: 1rem;
+    }
+    
+    .code-card h5 {
+        font-size: 1rem !important;
+    }
+    
+    .code-card p {
+        font-size: 0.875rem !important;
+    }
+    
+    /* Botones de acción en DetalleCode */
+    .code-header .btn-sm {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.875rem;
+    }
+    
+    /* Paginación */
+    .pagination {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .pagination .page-link {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.875rem;
+    }
+    
+    /* Formularios */
+    .form-control,
+    .form-select,
+    .btn {
+        font-size: 0.875rem;
+    }
+    
+    /* DetalleCode - Ajustes específicos */
+    .detalle-code-container {
+        padding-top: 80px;
+    }
+    
+    .code-header h1 {
+        font-size: 1.25rem !important;
+        word-wrap: break-word;
+    }
+    
+    .code-content {
+        font-size: 0.75rem;
+        overflow-x: auto;
+        max-width: 100%;
+    }
+    
+    /* Comentarios */
+    .comment-item {
+        padding: 0.75rem;
+    }
+    
+    .comment-item .autor-avatar {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+/* Landscape en móviles */
+@media (max-width: 768px) and (orientation: landscape) {
+    .hero-content {
+        padding: 2rem 1rem;
+    }
+    
+    .detalle-code-container {
+        padding-top: 70px;
+    }
+}
