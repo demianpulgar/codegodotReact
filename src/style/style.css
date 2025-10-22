@@ -260,3 +260,98 @@ footer .fa-discord:hover {
     color: #fff !important;
     border-color: #0284c7 !important;
 }
+
+/* ===========================================
+   ESTILOS PARA INICIO
+   =========================================== */
+
+/* Hero section - button */
+.hero-section .btn-light {
+    color: #1a5490 !important;
+}
+
+/* Sección de herramientas */
+.tools-section {
+    background-color: #1e293b !important;
+    padding: 4rem 0;
+}
+
+.tools-section h2 {
+    color: #f1f5f9 !important;
+    margin-bottom: 3rem;
+}
+
+.tool-card {
+    padding: 2rem;
+}
+
+.tool-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 1rem;
+    border-radius: 50%;
+    background: #334155 !important;
+    color: #38bdf8 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tool-icon span {
+    font-size: 1.5em;
+}
+
+.tool-card h5 {
+    color: #f1f5f9 !important;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.tool-card p {
+    color: #cbd5e1 !important;
+    font-size: 0.9em;
+    line-height: 1.6;
+}
+
+/* Sección blanca de Inicio */
+.white-section {
+    background-color: #1e293b !important;
+    padding: 4rem 0;
+}
+
+.white-section h2 {
+    color: #f1f5f9 !important;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.white-section p, .white-section ul {
+    line-height: 1.6;
+}
+
+.white-section img {
+    height: 200px;
+}
+
+/* Sección de Godot */
+.godot-section {
+    background-color: #0f172a !important;
+    padding: 4rem 0;
+    color: white !important;
+}
+
+.godot-section h2 {
+    color: #f1f5f9 !important;
+    margin-bottom: 2rem;
+}
+
+.godot-section p {
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    color: #cbd5e1 !important;
+}
+
+.godot-section img {
+    max-width: 300px;
+    filter: brightness(0) invert(1);
+}
