@@ -355,3 +355,113 @@ footer .fa-discord:hover {
     max-width: 300px;
     filter: brightness(0) invert(1);
 }
+
+/* ===========================================
+   ESTILOS PARA COMUNIDAD
+   =========================================== */
+
+/* Cards con hover effect */
+.card-hover {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: #1e293b !important;
+    border: 1px solid #334155 !important;
+}
+
+.card-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(56, 189, 248, 0.2) !important;
+}
+
+.card-hover .card-body {
+    color: #e2e8f0 !important;
+}
+
+.card-hover .card-title {
+    color: #f1f5f9 !important;
+}
+
+/* ===========================================
+   ESTILOS PARA DETALLE DE CÓDIGO
+   =========================================== */
+
+.detalle-code-container {
+    background-color: #0f172a !important;
+    min-height: 100vh;
+    padding-top: 100px;
+}
+
+.code-header {
+    background-color: #1e293b;
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid #334155;
+}
+
+.code-description {
+    background-color: #1e293b;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid #334155;
+}
+
+.code-description h4 {
+    color: #f1f5f9 !important;
+}
+
+.code-description p {
+    color: #cbd5e1 !important;
+    line-height: 1.8;
+}
+
+.code-block {
+    background-color: #1e293b;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid #334155;
+}
+
+.code-block h4 {
+    color: #f1f5f9 !important;
+}
+
+.code-content {
+    background-color: #0f172a !important;
+    color: #38bdf8 !important;
+    padding: 1.5rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    border: 1px solid #334155;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.code-content code {
+    color: #38bdf8 !important;
+}
+
+.comments-section {
+    background-color: #1e293b;
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid #334155;
+}
+
+.comments-section h4 {
+    color: #f1f5f9 !important;
+}
+
+.comment-item {
+    background-color: #0f172a;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #334155;
+}
+
+.comment-item p {
+    color: #cbd5e1 !important;
+}
+
+.comment-item .fw-bold {
+    color: #f1f5f9 !important;
+}

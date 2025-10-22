@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 function Comunidad() {
     return (
         <>
@@ -33,26 +35,28 @@ function Comunidad() {
                     <div className="row mb-4">
                         {Array.from({ length: 6 }).map((_, i) => (
                             <div className="col-lg-4 mb-4" key={i}>
-                                <div className="card h-100 shadow-sm" style={{ cursor: 'pointer' }}>
-                                    <div className="card-img-top d-flex align-items-center justify-content-center" style={{ height: 200 }}>
-                                        <img src="/src/assets/decoracionComunidad.png" alt="Godot Code" style={{ maxHeight: 150 }} />
-                                    </div>
-                                    <div className="card-body">
-                                        <div className="d-flex justify-content-between align-items-center mb-2">
-                                            <small className="text-muted">Categoría</small>
-                                            <small className="text-muted">Oct 12, 2025</small>
+                                <Link to={`/comunidad/${i + 1}`} className="text-decoration-none">
+                                    <div className="card h-100 shadow-sm card-hover">
+                                        <div className="card-img-top d-flex align-items-center justify-content-center" style={{ height: 200 }}>
+                                            <img src="/src/assets/decoracionComunidad.png" alt="Godot Code" style={{ maxHeight: 150 }} />
                                         </div>
-                                        <h5 className="card-title fw-bold">Título de ejemplo #{i + 1}</h5>
-                                        <p className="card-text text-muted">Descripción corta del snippet que explica de qué va y cómo se usa en pocas líneas.</p>
-                                        <div className="d-flex justify-content-between align-items-center">
-                                            <small className="text-muted">Autor</small>
-                                            <div>
-                                                <button className="btn btn-sm btn-outline-secondary me-1"><i className="far fa-heart" style={{ fontSize: 16 }}></i></button>
-                                                <button className="btn btn-sm btn-outline-secondary"><i className="far fa-bookmark" style={{ fontSize: 16 }}></i></button>
+                                        <div className="card-body">
+                                            <div className="d-flex justify-content-between align-items-center mb-2">
+                                                <small className="text-muted">Categoría</small>
+                                                <small className="text-muted">Oct 12, 2025</small>
+                                            </div>
+                                            <h5 className="card-title fw-bold">Título de ejemplo #{i + 1}</h5>
+                                            <p className="card-text text-muted">Descripción corta del snippet que explica de qué va y cómo se usa en pocas líneas.</p>
+                                            <div className="d-flex justify-content-between align-items-center">
+                                                <small className="text-muted">Autor</small>
+                                                <div>
+                                                    <span className="me-2"><i className="far fa-heart"></i> 42</span>
+                                                    <span><i className="far fa-bookmark"></i> 15</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </Link>
                             </div>
                         ))}
                     </div>

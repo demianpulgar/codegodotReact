@@ -8,6 +8,7 @@ import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import Inicio from './components/Inicio'
 import Comunidad from './components/Comunidad'
+import DetalleCode from './components/DetalleCode'
 import Login from './components/Login'
 import Registro from './components/Registro'
 import Perfil from './components/Perfil'
@@ -19,6 +20,7 @@ createRoot(document.getElementById('root')).render(
       <Routes>
         <Route path="/" element={<Inicio />} />
         <Route path="/comunidad" element={<Comunidad />} />
+        <Route path="/comunidad/:id" element={<DetalleCode />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
         <Route path="/perfil" element={<Perfil />} />
