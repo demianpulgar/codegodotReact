@@ -1,10 +1,31 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import './index.css'
-
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'
+import '/src/style/style.css'
+import Navbar from './components/Navbar'
+import Footer from './components/Footer'
+import Inicio from './components/Inicio'
+import Comunidad from './components/Comunidad'
+import DetalleCode from './components/DetalleCode'
+import Login from './components/Login'
+import Registro from './components/Registro'
+import Perfil from './components/Perfil'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    
+    <BrowserRouter>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Inicio />} />
+        <Route path="/comunidad" element={<Comunidad />} />
+        <Route path="/comunidad/:id" element={<DetalleCode />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/registro" element={<Registro />} />
+        <Route path="/perfil" element={<Perfil />} />
+      </Routes>
+      <Footer />
+    </BrowserRouter>
   </StrictMode>,
 )
