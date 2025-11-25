@@ -1,19 +1,70 @@
 import { Link } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import codigoService from '../services/codigoService'
 import { codigosData } from '../data/codigosData'
 import decoracionComunidad from '../assets/decoracionComunidad.png'
 
 function Comunidad() {
     const [paginaActual, setPaginaActual] = useState(1)
+    const [codigos, setCodigos] = useState([])
+    const [cargando, setCargando] = useState(true)
+    const [error, setError] = useState(null)
+    const [busqueda, setBusqueda] = useState('')
     const codigosPorPagina = 9
+
+    // Cargar códigos desde la API
+    useEffect(() => {
+        cargarCodigos()
+    }, [])
+
+    const cargarCodigos = async () => {
+        try {
+            setCargando(true)
+            const datos = await codigoService.obtenerTodos()
+            // Si la API no devuelve datos, usar datos locales como fallback
+            setCodigos(datos.length > 0 ? datos : codigosData)
+            setError(null)
+        } catch (err) {
+            console.warn('Error al cargar códigos desde API, usando datos locales:', err)
+            setCodigos(codigosData)
+            setError('Usando datos de ejemplo (API no disponible)')
+        } finally {
+            setCargando(false)
+        }
+    }
+
+    const buscarCodigos = async () => {
+        if (!busqueda.trim()) {
+            cargarCodigos()
+            return
+        }
+
+        try {
+            setCargando(true)
+            const resultados = await codigoService.buscarPorTitulo(busqueda)
+            setCodigos(resultados)
+            setPaginaActual(1)
+            setError(null)
+        } catch (err) {
+            console.error('Error al buscar códigos:', err)
+            // Fallback a búsqueda local
+            const resultadosLocales = codigosData.filter(c => 
+                c.titulo.toLowerCase().includes(busqueda.toLowerCase())
+            )
+            setCodigos(resultadosLocales)
+            setError('Búsqueda local (API no disponible)')
+        } finally {
+            setCargando(false)
+        }
+    }
     
     // Calcular índices para la paginación
     const indiceUltimo = paginaActual * codigosPorPagina
     const indicePrimero = indiceUltimo - codigosPorPagina
-    const codigosActuales = codigosData.slice(indicePrimero, indiceUltimo)
+    const codigosActuales = codigos.slice(indicePrimero, indiceUltimo)
     
     // Calcular número total de páginas
-    const totalPaginas = Math.ceil(codigosData.length / codigosPorPagina)
+    const totalPaginas = Math.ceil(codigos.length / codigosPorPagina)
     
     // Cambiar de página
     const cambiarPagina = (numeroPagina) => {
@@ -33,13 +84,29 @@ function Comunidad() {
                         Podrás buscar por lo que te interesa, los gustos que te apasionen y ahorrar todo el tiempo del mundo :). 
                     </p>
 
+                    {/* Mensaje de estado */}
+                    {error && (
+                        <div className="alert alert-warning" role="alert">
+                            {error}
+                        </div>
+                    )}
+
                     {/* Sección de búsqueda */}
                     <div className="row justify-content-center mb-4">
                         <div className="col-12 col-md-8 col-lg-6">
                             <div className="d-flex flex-column flex-sm-row gap-2">
-                                <input type="text" className="form-control flex-grow-1" placeholder="Buscar códigos..." />
-                                <button className="btn btn-light">Filtros</button>
-                                <button className="btn btn-light">Buscar</button>
+                                <input 
+                                    type="text" 
+                                    className="form-control flex-grow-1" 
+                                    placeholder="Buscar códigos..." 
+                                    value={busqueda}
+                                    onChange={(e) => setBusqueda(e.target.value)}
+                                    onKeyPress={(e) => e.key === 'Enter' && buscarCodigos()}
+                                />
+                                <button className="btn btn-light" onClick={buscarCodigos}>Buscar</button>
+                                {busqueda && (
+                                    <button className="btn btn-outline-light" onClick={cargarCodigos}>Limpiar</button>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -51,8 +118,21 @@ function Comunidad() {
                 <div className="container">
                     <h2 className="fw-bold mb-4">Códigos</h2>
 
-                    {/* Grid de tarjetas */}
-                    <div className="row mb-4">
+                    {/* Estado de carga */}
+                    {cargando ? (
+                        <div className="text-center py-5">
+                            <div className="spinner-border text-primary" role="status">
+                                <span className="visually-hidden">Cargando...</span>
+                            </div>
+                        </div>
+                    ) : codigosActuales.length === 0 ? (
+                        <div className="text-center py-5">
+                            <p className="text-muted">No se encontraron códigos.</p>
+                        </div>
+                    ) : (
+                        <>
+                            {/* Grid de tarjetas */}
+                            <div className="row mb-4">
                         {codigosActuales.map((codigo) => (
                             <div className="col-12 col-sm-6 col-lg-4 mb-4" key={codigo.id}>
                                 <Link to={`/comunidad/${codigo.id}`} className="text-decoration-none">
@@ -123,6 +203,8 @@ function Comunidad() {
                                 </li>
                             </ul>
                         </nav>
+                    )}
+                        </>
                     )}
 
                     {/* CTA */}

@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import codigoService from '../services/codigoService'
 import { codigosData } from '../data/codigosData'
 import Logo from '../assets/Logo.png'
 
@@ -7,8 +8,30 @@ function DetalleCode() {
     const { id } = useParams()
     const navigate = useNavigate()
 
-    // Buscar el código correspondiente al ID
-    const codigoActual = codigosData.find(codigo => codigo.id === parseInt(id)) || codigosData[0]
+    const [codigoActual, setCodigoActual] = useState(null)
+    const [cargando, setCargando] = useState(true)
+    const [error, setError] = useState(null)
+
+    // Cargar código desde la API
+    useEffect(() => {
+        cargarCodigo()
+    }, [id])
+
+    const cargarCodigo = async () => {
+        try {
+            setCargando(true)
+            const datos = await codigoService.obtenerPorId(parseInt(id))
+            setCodigoActual(datos)
+            setError(null)
+        } catch (err) {
+            console.warn('Error al cargar código desde API, usando datos locales:', err)
+            const codigoLocal = codigosData.find(codigo => codigo.id === parseInt(id)) || codigosData[0]
+            setCodigoActual(codigoLocal)
+            setError('Usando datos de ejemplo (API no disponible)')
+        } finally {
+            setCargando(false)
+        }
+    }
 
     // Comentarios de ejemplo
     const comentariosEjemplo = [
@@ -31,8 +54,10 @@ function DetalleCode() {
     const [saved, setSaved] = useState(false)
 
     const copiarCodigo = () => {
-        navigator.clipboard.writeText(codigoActual.codigo)
-        alert('Código copiado al portapapeles!')
+        if (codigoActual && codigoActual.codigo) {
+            navigator.clipboard.writeText(codigoActual.codigo)
+            alert('Código copiado al portapapeles!')
+        }
     }
 
     const handleSubmitComentario = (e) => {
@@ -43,6 +68,31 @@ function DetalleCode() {
         }
     }
 
+    if (cargando) {
+        return (
+            <div className="detalle-code-container">
+                <div className="container py-5 text-center">
+                    <div className="spinner-border text-primary" role="status">
+                        <span className="visually-hidden">Cargando...</span>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    if (!codigoActual) {
+        return (
+            <div className="detalle-code-container">
+                <div className="container py-5 text-center">
+                    <h2>Código no encontrado</h2>
+                    <button onClick={() => navigate('/comunidad')} className="btn btn-primary mt-3">
+                        Volver a Comunidad
+                    </button>
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className="detalle-code-container">
             <div className="container py-5">
@@ -50,6 +100,13 @@ function DetalleCode() {
                 <button onClick={() => navigate('/comunidad')} className="btn btn-outline-light mb-4">
                     ← Volver a Comunidad
                 </button>
+
+                {/* Mensaje de estado */}
+                {error && (
+                    <div className="alert alert-warning" role="alert">
+                        {error}
+                    </div>
+                )}
 
                 {/* Header del código */}
                 <div className="code-header mb-4">
