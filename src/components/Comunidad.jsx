@@ -1,10 +1,14 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import codigoService from '../services/codigoService'
 import { codigosData } from '../data/codigosData'
 import decoracionComunidad from '../assets/decoracionComunidad.png'
+import { useAuth } from '../context/AuthContext'
+import { toggleLike, toggleSave } from '../services/userDataService'
 
 function Comunidad() {
+    const navigate = useNavigate()
+    const { user } = useAuth()
     const [paginaActual, setPaginaActual] = useState(1)
     const [codigos, setCodigos] = useState([])
     const [cargando, setCargando] = useState(true)
@@ -133,7 +137,7 @@ function Comunidad() {
                         <>
                             {/* Grid de tarjetas */}
                             <div className="row mb-4">
-                        {codigosActuales.map((codigo) => (
+                                {codigosActuales.map((codigo) => (
                             <div className="col-12 col-sm-6 col-lg-4 mb-4" key={codigo.id}>
                                 <Link to={`/comunidad/${codigo.id}`} className="text-decoration-none">
                                     <div className="card h-100 shadow-sm card-hover">
@@ -147,12 +151,32 @@ function Comunidad() {
                                             </div>
                                             <h5 className="card-title fw-bold">{codigo.titulo}</h5>
                                             <p className="card-text text-muted">{codigo.descripcion}</p>
-                                            <div className="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                                                    <div className="d-flex justify-content-between align-items-center flex-wrap gap-2">
                                                 <small className="text-muted">{codigo.autor}</small>
-                                                <div>
-                                                    <span className="me-2"><i className="far fa-heart"></i> {codigo.likes}</span>
-                                                    <span><i className="far fa-bookmark"></i> {codigo.guardados}</span>
-                                                </div>
+                                                        <div className="d-flex gap-2">
+                                                            <button
+                                                                type="button"
+                                                                className="btn btn-sm btn-outline-danger"
+                                                                onClick={(e) => {
+                                                                    e.preventDefault()
+                                                                    if (!user) { alert('Inicia sesión para dar me gusta'); navigate('/login'); return }
+                                                                    toggleLike(user.username, codigo.id)
+                                                                }}
+                                                            >
+                                                                <i className="far fa-heart"></i>
+                                                            </button>
+                                                            <button
+                                                                type="button"
+                                                                className="btn btn-sm btn-outline-warning"
+                                                                onClick={(e) => {
+                                                                    e.preventDefault()
+                                                                    if (!user) { alert('Inicia sesión para guardar'); navigate('/login'); return }
+                                                                    toggleSave(user.username, codigo.id)
+                                                                }}
+                                                            >
+                                                                <i className="far fa-bookmark"></i>
+                                                            </button>
+                                                        </div>
                                             </div>
                                         </div>
                                     </div>

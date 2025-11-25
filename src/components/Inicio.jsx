@@ -15,6 +15,8 @@ function Inicio() {
                             <p className="lead mb-4">Una experiencia agradable, fácil uso y ahorro de tiempo.<br/>CodeGodot es una página que te ayudará ahorrar tiempo y ayudando al aprendizaje con la rápida adquisición de código fácil y rápido que entregamos para tu proyecto de godot :)</p>
                             <div className="d-flex gap-2 flex-column flex-sm-row justify-content-center justify-content-lg-start">
                                 <Link to="/comunidad" className="btn btn-light fw-bold px-4 py-2">Comenzar</Link>
+                                <Link to="/que-es-godot" className="btn btn-outline-light fw-bold px-4 py-2">¿Qué es Godot?</Link>
+                                <Link to="/tutorial" className="btn btn-outline-light fw-bold px-4 py-2">Cómo usar códigos</Link>
                             </div>
                         </div>
                         {/* Columna vacía (derecha) - Solo visible en desktop */}
@@ -62,6 +64,11 @@ function Inicio() {
                     <div className="row align-items-center">
                         <div className="col-lg-7 mb-4 mb-lg-0">
                             <h2 className="fw-bold mb-4">¿Qué es Godot?</h2>
+                            <p>
+                                Si eres principiante, te recomendamos revisar el apartado
+                                <Link to="/que-es-godot" className="ms-1">¿Qué es Godot?</Link> donde explicamos los conceptos básicos.
+                                También puedes ver el <Link to="/tutorial">tutorial</Link> paso a paso para implementar los códigos.
+                            </p>
                             <p>
                                 Godot es un motor de desarrollo de videojuegos libre y de código abierto, que permite crear 
                                 juegos en 2D y 3D con facilidad. Su filosofía de nodos y escenas facilita la 

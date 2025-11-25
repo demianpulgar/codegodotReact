@@ -1,5 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
+import { useAuth } from '../context/AuthContext'
+import { toggleLike, toggleSave, getUserData } from '../services/userDataService'
 import codigoService from '../services/codigoService'
 import { codigosData } from '../data/codigosData'
 import Logo from '../assets/Logo.png'
@@ -7,6 +9,7 @@ import Logo from '../assets/Logo.png'
 function DetalleCode() {
     const { id } = useParams()
     const navigate = useNavigate()
+    const { user } = useAuth()
 
     const [codigoActual, setCodigoActual] = useState(null)
     const [cargando, setCargando] = useState(true)
@@ -53,11 +56,42 @@ function DetalleCode() {
     const [liked, setLiked] = useState(false)
     const [saved, setSaved] = useState(false)
 
+    useEffect(() => {
+        if (user) {
+            const data = getUserData(user.username)
+            setLiked(data.likes.includes(parseInt(id)))
+            setSaved(data.saves.includes(parseInt(id)))
+        } else {
+            setLiked(false)
+            setSaved(false)
+        }
+    }, [user, id])
+
     const copiarCodigo = () => {
         if (codigoActual && codigoActual.codigo) {
             navigator.clipboard.writeText(codigoActual.codigo)
             alert('Código copiado al portapapeles!')
         }
+    }
+
+    const handleLike = () => {
+        if (!user) {
+            alert('Inicia sesión para dar me gusta')
+            navigate('/login')
+            return
+        }
+        const likes = toggleLike(user.username, parseInt(id))
+        setLiked(likes.includes(parseInt(id)))
+    }
+
+    const handleSave = () => {
+        if (!user) {
+            alert('Inicia sesión para guardar')
+            navigate('/login')
+            return
+        }
+        const saves = toggleSave(user.username, parseInt(id))
+        setSaved(saves.includes(parseInt(id)))
     }
 
     const handleSubmitComentario = (e) => {
@@ -121,13 +155,13 @@ function DetalleCode() {
                         <div className="d-flex gap-2 flex-shrink-0">
                             <button 
                                 className={`btn btn-sm ${liked ? 'btn-danger' : 'btn-outline-danger'}`}
-                                onClick={() => setLiked(!liked)}
+                                onClick={handleLike}
                             >
                                 <i className="far fa-heart"></i> {codigoActual.likes + (liked ? 1 : 0)}
                             </button>
                             <button 
                                 className={`btn btn-sm ${saved ? 'btn-warning' : 'btn-outline-warning'}`}
-                                onClick={() => setSaved(!saved)}
+                                onClick={handleSave}
                             >
                                 <i className="far fa-bookmark"></i>
                             </button>

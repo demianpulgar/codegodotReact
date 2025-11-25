@@ -12,20 +12,27 @@ import DetalleCode from './components/DetalleCode'
 import Login from './components/Login'
 import Registro from './components/Registro'
 import Perfil from './components/Perfil'
+import QueEsGodot from './pages/QueEsGodot'
+import Tutorial from './pages/Tutorial'
+import { AuthProvider } from './context/AuthContext'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
-      <Navbar />
-      <Routes>
+    <AuthProvider>
+      <BrowserRouter>
+        <Navbar />
+        <Routes>
         <Route path="/" element={<Inicio />} />
         <Route path="/comunidad" element={<Comunidad />} />
         <Route path="/comunidad/:id" element={<DetalleCode />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro />} />
         <Route path="/perfil" element={<Perfil />} />
-      </Routes>
-      <Footer />
-    </BrowserRouter>
+        <Route path="/que-es-godot" element={<QueEsGodot />} />
+        <Route path="/tutorial" element={<Tutorial />} />
+        </Routes>
+        <Footer />
+      </BrowserRouter>
+    </AuthProvider>
   </StrictMode>,
 )

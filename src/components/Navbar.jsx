@@ -58,6 +58,12 @@ function Navbar() {
                             <Link className="nav-link text-white" to="/" onClick={cerrarNavbar}>INICIO</Link>
                         </li>
                         <li className="nav-item">
+                            <Link className="nav-link text-white" to="/que-es-godot" onClick={cerrarNavbar}>¿QUÉ ES GODOT?</Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link className="nav-link text-white" to="/tutorial" onClick={cerrarNavbar}>TUTORIAL</Link>
+                        </li>
+                        <li className="nav-item">
                             <Link className="nav-link text-white" to="/comunidad" onClick={cerrarNavbar}>COMUNIDAD</Link>
                         </li>
                         {usuarioLogueado ? (
