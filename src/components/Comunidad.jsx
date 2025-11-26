@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { codigosData } from '../data/codigosData'
+import codigoService from '../services/codigoService'
 import { useAuth } from '../context/AuthContext'
 import { toggleLike, toggleSave } from '../services/userDataService'
 import CategoryFilter from './CategoryFilter'
@@ -10,28 +10,44 @@ import LoginPromptModal from './LoginPromptModal'
 function Comunidad() {
     const { user } = useAuth()
     const [paginaActual, setPaginaActual] = useState(1)
-    const [codigos, setCodigos] = useState(codigosData && Array.isArray(codigosData) ? codigosData : [])
+    const [codigosOriginales, setCodigosOriginales] = useState([])
+    const [codigos, setCodigos] = useState([])
     const [busqueda, setBusqueda] = useState('')
     const [selectedCategory, setSelectedCategory] = useState(null)
     const [showLoginPrompt, setShowLoginPrompt] = useState(false)
     const [loginAction, setLoginAction] = useState('Dar me gusta')
+    const [cargando, setCargando] = useState(true)
+    const [error, setError] = useState(null)
     const codigosPorPagina = 9
 
-    // Inicializar datos en el primer render
+    // Cargar datos desde la API
     useEffect(() => {
-        if (codigosData && Array.isArray(codigosData) && codigosData.length > 0) {
-            setCodigos(codigosData)
+        const cargarCodigos = async () => {
+            try {
+                setCargando(true)
+                const datos = await codigoService.obtenerTodos()
+                setCodigosOriginales(datos)
+                setCodigos(datos)
+                setError(null)
+            } catch (err) {
+                console.error('Error cargando códigos desde API:', err)
+                setError('Error al cargar los códigos. Por favor, intenta más tarde.')
+                setCodigos([])
+            } finally {
+                setCargando(false)
+            }
         }
+        cargarCodigos()
     }, [])
 
     // Filtrado combinado: búsqueda + categoría
     useEffect(() => {
-        if (!codigosData || !Array.isArray(codigosData) || codigosData.length === 0) {
+        if (!codigosOriginales || codigosOriginales.length === 0) {
             setCodigos([])
             return
         }
 
-        let filtrados = [...codigosData]
+        let filtrados = [...codigosOriginales]
 
         // Aplicar filtro de categoría
         if (selectedCategory) {
@@ -49,7 +65,7 @@ function Comunidad() {
 
         setCodigos(filtrados)
         setPaginaActual(1)
-    }, [busqueda, selectedCategory])
+    }, [busqueda, selectedCategory, codigosOriginales])
 
     // Limpiar búsqueda y filtros
     const limpiarFiltros = () => {
@@ -146,7 +162,18 @@ function Comunidad() {
                     </h2>
 
                     {/* Estado de carga */}
-                    {codigosActuales.length === 0 ? (
+                    {cargando ? (
+                        <div className="text-center py-5">
+                            <div className="spinner-border text-success" role="status">
+                                <span className="visually-hidden">Cargando...</span>
+                            </div>
+                            <p className="text-muted mt-3">Cargando códigos desde el servidor...</p>
+                        </div>
+                    ) : error ? (
+                        <div className="alert alert-danger text-center py-5" role="alert">
+                            <i className="fas fa-exclamation-circle"></i> {error}
+                        </div>
+                    ) : codigosActuales.length === 0 ? (
                         <div className="text-center py-5">
                             <p className="text-muted fs-5">
                                 {busqueda || selectedCategory 
