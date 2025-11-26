@@ -5,19 +5,34 @@ import { useAuth } from '../context/AuthContext'
 import { toggleLike, toggleSave } from '../services/userDataService'
 import CategoryFilter from './CategoryFilter'
 import CodePreview from './CodePreview'
+import LoginPromptModal from './LoginPromptModal'
 
 function Comunidad() {
     const navigate = useNavigate()
     const { user } = useAuth()
     const [paginaActual, setPaginaActual] = useState(1)
-    const [codigos, setCodigos] = useState(codigosData)
+    const [codigos, setCodigos] = useState(codigosData && Array.isArray(codigosData) ? codigosData : [])
     const [busqueda, setBusqueda] = useState('')
     const [selectedCategory, setSelectedCategory] = useState(null)
+    const [showLoginPrompt, setShowLoginPrompt] = useState(false)
+    const [loginAction, setLoginAction] = useState('Dar me gusta')
     const codigosPorPagina = 9
+
+    // Inicializar datos en el primer render
+    useEffect(() => {
+        if (codigosData && Array.isArray(codigosData) && codigosData.length > 0) {
+            setCodigos(codigosData)
+        }
+    }, [])
 
     // Filtrado combinado: búsqueda + categoría
     useEffect(() => {
-        let filtrados = codigosData
+        if (!codigosData || !Array.isArray(codigosData) || codigosData.length === 0) {
+            setCodigos([])
+            return
+        }
+
+        let filtrados = [...codigosData]
 
         // Aplicar filtro de categoría
         if (selectedCategory) {
@@ -56,6 +71,25 @@ function Comunidad() {
     const cambiarPagina = (numeroPagina) => {
         setPaginaActual(numeroPagina)
         window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+
+    // Manejadores con modal de login
+    const handleLike = (codigo) => {
+        if (!user) {
+            setLoginAction('dar me gusta a este código')
+            setShowLoginPrompt(true)
+            return
+        }
+        toggleLike(user.username, codigo.id)
+    }
+
+    const handleSave = (codigo) => {
+        if (!user) {
+            setLoginAction('guardar este código')
+            setShowLoginPrompt(true)
+            return
+        }
+        toggleSave(user.username, codigo.id)
     }
 
     return (
@@ -132,57 +166,47 @@ function Comunidad() {
                             {/* Grid de tarjetas */}
                             <div className="row mb-4">
                                 {codigosActuales.map((codigo) => (
-                                    <div className="col-12 col-sm-6 col-lg-4 mb-4" key={codigo.id}>
-                                        <div className="card h-100 shadow-sm card-hover">
-                                            <div className="card-code-preview">
-                                                <CodePreview codigo={codigo.código.substring(0, 200)} />
-                                            </div>
-                                            <div className="card-body">
-                                                <div className="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
-                                                    <small className="badge bg-info text-dark">{codigo.categoria}</small>
-                                                    <small className="text-muted">{codigo.fecha}</small>
+                                    codigo && codigo.id ? (
+                                        <div className="col-12 col-sm-6 col-lg-4 mb-4" key={codigo.id}>
+                                            <div className="card h-100 shadow-sm card-hover">
+                                                <div className="card-code-preview">
+                                                    <CodePreview codigo={codigo.código ? codigo.código.substring(0, 200) : ''} />
                                                 </div>
-                                                <h5 className="card-title fw-bold">{codigo.titulo}</h5>
-                                                <p className="card-text text-muted">{codigo.descripcion.substring(0, 80)}...</p>
-                                                <div className="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
-                                                    <small className="text-muted">{codigo.autor}</small>
-                                                    <Link to={`/comunidad/${codigo.id}`} className="btn btn-sm btn-light fw-bold">
-                                                        Ver más
-                                                    </Link>
-                                                </div>
-                                                <div className="d-flex gap-2 flex-wrap">
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-sm btn-outline-danger flex-grow-1"
-                                                        onClick={() => {
-                                                            if (!user) { 
-                                                                alert('Inicia sesión para dar me gusta')
-                                                                navigate('/login')
-                                                                return 
-                                                            }
-                                                            toggleLike(user.username, codigo.id)
-                                                        }}
-                                                    >
-                                                        <i className="far fa-heart"></i> {codigo.likes}
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-sm btn-outline-warning flex-grow-1"
-                                                        onClick={() => {
-                                                            if (!user) { 
-                                                                alert('Inicia sesión para guardar')
-                                                                navigate('/login')
-                                                                return 
-                                                            }
-                                                            toggleSave(user.username, codigo.id)
-                                                        }}
-                                                    >
-                                                        <i className="far fa-bookmark"></i> {codigo.guardados}
-                                                    </button>
+                                                <div className="card-body">
+                                                    <div className="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+                                                        <small className="badge bg-info text-dark">{codigo.categoria || 'Sin categoría'}</small>
+                                                        <small className="text-muted">{codigo.fecha || 'Sin fecha'}</small>
+                                                    </div>
+                                                    <h5 className="card-title fw-bold">{codigo.titulo || 'Sin título'}</h5>
+                                                    <p className="card-text text-muted">
+                                                        {codigo.descripcion ? codigo.descripcion.substring(0, 80) + '...' : 'Sin descripción'}
+                                                    </p>
+                                                    <div className="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
+                                                        <small className="text-muted">{codigo.autor || 'Anónimo'}</small>
+                                                        <Link to={`/comunidad/${codigo.id}`} className="btn btn-sm btn-light fw-bold">
+                                                            Ver más
+                                                        </Link>
+                                                    </div>
+                                                    <div className="d-flex gap-2 flex-wrap">
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-sm btn-outline-danger flex-grow-1"
+                                                            onClick={() => handleLike(codigo)}
+                                                        >
+                                                            <i className="far fa-heart"></i> {codigo.likes || 0}
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-sm btn-outline-warning flex-grow-1"
+                                                            onClick={() => handleSave(codigo)}
+                                                        >
+                                                            <i className="far fa-bookmark"></i> {codigo.guardados || 0}
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    ) : null
                                 ))}
                             </div>
 
@@ -248,6 +272,12 @@ function Comunidad() {
                     </div>
                 </div>
             </section>
+            {/* Modal de Login */}
+            <LoginPromptModal 
+                isOpen={showLoginPrompt}
+                onClose={() => setShowLoginPrompt(false)}
+                action={loginAction}
+            />
         </>
     )
 }

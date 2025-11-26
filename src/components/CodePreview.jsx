@@ -1,13 +1,26 @@
 import { useState } from 'react'
 import '../style/codePreview.css'
 
-export default function CodePreview({ codigo }) {
+export default function CodePreview({ codigo = '' }) {
   const [isCopied, setIsCopied] = useState(false)
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(codigo)
+    navigator.clipboard.writeText(codigo || '')
     setIsCopied(true)
     setTimeout(() => setIsCopied(false), 2000)
+  }
+
+  if (!codigo) {
+    return (
+      <div className="code-preview-container">
+        <div className="code-preview-header">
+          <span className="code-language">GDScript</span>
+        </div>
+        <pre className="code-preview-content">
+          <code>// Código vacío</code>
+        </pre>
+      </div>
+    )
   }
 
   return (
