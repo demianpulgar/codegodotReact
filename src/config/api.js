@@ -1,10 +1,10 @@
 // Configuración de API según entorno
 const API_CONFIG = {
   development: {
-    baseURL: 'http://localhost:8080/api',
+    baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
   },
   production: {
-    baseURL: import.meta.env.VITE_API_URL || 'http://YOUR_EC2_BACKEND_IP:8080/api',
+    baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
   }
 };
 

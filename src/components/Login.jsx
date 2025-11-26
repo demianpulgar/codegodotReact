@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import config from '../config/api'
+import Toast from './Toast'
 
 function Login() {
     const navigate = useNavigate()
@@ -10,12 +12,8 @@ function Login() {
     })
     const [errors, setErrors] = useState({})
     const [mensaje, setMensaje] = useState({ texto: '', tipo: '' })
-
-    // Utilidades
-    const obtenerUsuarios = () => {
-        const usuarios = localStorage.getItem('usuarios')
-        return usuarios ? JSON.parse(usuarios) : []
-    }
+    const [cargando, setCargando] = useState(false)
+    const [toast, setToast] = useState(null)
 
     const validarEmail = (email) => {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
@@ -31,7 +29,6 @@ function Login() {
             ...prev,
             [id]: value
         }))
-        // Limpiar error del campo cuando el usuario escribe
         if (errors[id]) {
             setErrors(prev => ({
                 ...prev,
@@ -40,7 +37,7 @@ function Login() {
         }
     }
 
-    const iniciarSesion = (e) => {
+    const iniciarSesion = async (e) => {
         e.preventDefault()
         const newErrors = {}
         let valido = true
@@ -64,38 +61,67 @@ function Login() {
             return
         }
 
-        // Buscar usuario
-        const usuarios = obtenerUsuarios()
-        const user = usuarios.find(u => 
-            (u.correo === formData.correo && u.password === formData.password) ||
-            (u.usuario === formData.usuario && u.password === formData.password)
-        )
+        setCargando(true)
+        try {
+            // Intentar login con el backend
+            const response = await fetch(`${config.baseURL}/usuarios/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    usuario: formData.usuario,
+                    correo: formData.correo,
+                    password: formData.password
+                })
+            })
 
-        if (!user) {
-            setMensaje({ 
-                texto: 'Correo, usuario o contraseña incorrectos.', 
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}))
+                throw new Error(errorData.message || 'Credenciales inválidas')
+            }
+
+            const userData = await response.json()
+            
+            // Guardar usuario en localStorage
+            const usuarioParaGuardar = {
+                ...userData,
+                username: userData.username || formData.usuario
+            }
+            localStorage.setItem('usuarioLogeado', JSON.stringify(usuarioParaGuardar))
+            
+            setToast({ 
+                texto: '¡Bienvenido ' + userData.nombre + '!', 
+                tipo: 'success' 
+            })
+            
+            // Disparar evento
+            window.dispatchEvent(new Event('storage'))
+            
+            setTimeout(() => {
+                navigate('/')
+            }, 1200)
+        } catch (error) {
+            console.error('Error en login:', error)
+            setToast({ 
+                texto: error.message || 'Correo, usuario o contraseña incorrectos.', 
                 tipo: 'danger' 
             })
-            return
+        } finally {
+            setCargando(false)
         }
-
-        // Guardar sesión
-        localStorage.setItem('usuarioLogeado', JSON.stringify(user))
-        setMensaje({ 
-            texto: '¡Inicio de sesión exitoso!', 
-            tipo: 'success' 
-        })
-        
-        // Disparar evento de actualización para que el Navbar se actualice
-        window.dispatchEvent(new Event('storage'))
-        
-        setTimeout(() => {
-            navigate('/')
-        }, 1200)
     }
 
     return (
-        <main className="container py-5" style={{ marginTop: '100px' }}>
+        <>
+            {toast && (
+                <Toast 
+                    mensaje={toast.texto} 
+                    tipo={toast.tipo}
+                    onClose={() => setToast(null)}
+                />
+            )}
+            <main className="container py-5" style={{ marginTop: '100px' }}>
             <div className="row">
                 <div className="col-lg-6 mb-4 mb-lg-0">
                     <div className="card border-0 shadow-sm bg-light">
@@ -152,7 +178,13 @@ function Login() {
                                         <div className="invalid-feedback d-block">{errors.password}</div>
                                     )}
                                 </div>
-                                <button type="submit" className="btn btn-light fw-bold px-5 py-2">Inicio Sesión</button>
+                                <button 
+                                    type="submit" 
+                                    className="btn btn-light fw-bold px-5 py-2"
+                                    disabled={cargando}
+                                >
+                                    {cargando ? 'Iniciando sesión...' : 'Inicio Sesión'}
+                                </button>
                             </form>
                         </div>
                     </div>
@@ -177,7 +209,8 @@ function Login() {
                     </div>
                 </div>
             </div>
-        </main>
+            </main>
+        </>
     )
 }
 

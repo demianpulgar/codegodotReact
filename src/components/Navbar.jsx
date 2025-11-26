@@ -25,16 +25,12 @@ function Navbar() {
 
     // Función para cerrar el navbar móvil
     const cerrarNavbar = () => {
+        setNavOpen(false)
+        // Cerrar el collapse de Bootstrap manualmente
         const navbarCollapse = document.getElementById('navbarNav')
         if (navbarCollapse && navbarCollapse.classList.contains('show')) {
-            const bsCollapse = window.bootstrap.Collapse.getInstance(navbarCollapse)
-            if (bsCollapse) {
-                bsCollapse.hide()
-            } else {
-                navbarCollapse.classList.remove('show')
-            }
+            navbarCollapse.classList.remove('show')
         }
-        setNavOpen(false)
     }
 
     const handleLogout = () => {
@@ -48,8 +44,8 @@ function Navbar() {
         <nav className="navbar navbar-expand-lg fixed-top">
             <div className="container">
                 <Link className="navbar-brand me-4" to="/" onClick={cerrarNavbar}>
-                    <img src={Logo} alt="CodeGodot Logo" className="d-none d-md-block" style={{height: '50px', width: 'auto'}} />
-                    <img src={Logo} alt="CodeGodot Logo" className="d-md-none" style={{height: '40px', width: 'auto'}} />
+                    <img src={Logo} alt="CodeGodot Logo" className="d-none d-md-block" style={{height: '80px', width: 'auto'}} />
+                    <img src={Logo} alt="CodeGodot Logo" className="d-md-none" style={{height: '60px', width: 'auto'}} />
                 </Link>
                 <button 
                     className="navbar-toggler" 
@@ -102,7 +98,9 @@ function Navbar() {
                                     </Link>
                                 </li>
                                 <li className="nav-item">
-                                    <Link className="btn btn-light fw-bold px-3" to="/registro" onClick={cerrarNavbar}>REGISTRAR</Link>
+                                    <Link className="btn btn-registrar fw-bold" to="/registro" onClick={cerrarNavbar}>
+                                        <i className="fas fa-user-plus me-1"></i> REGISTRAR
+                                    </Link>
                                 </li>
                             </>
                         )}

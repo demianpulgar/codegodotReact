@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import config from '../config/api'
+import Toast from './Toast'
 
 function Registro() {
     const navigate = useNavigate()
@@ -16,16 +18,8 @@ function Registro() {
     })
     const [errors, setErrors] = useState({})
     const [mensaje, setMensaje] = useState({ texto: '', tipo: '' })
-
-    // Utilidades
-    const obtenerUsuarios = () => {
-        const usuarios = localStorage.getItem('usuarios')
-        return usuarios ? JSON.parse(usuarios) : []
-    }
-
-    const guardarUsuarios = (usuarios) => {
-        localStorage.setItem('usuarios', JSON.stringify(usuarios))
-    }
+    const [cargando, setCargando] = useState(false)
+    const [toast, setToast] = useState(null)
 
     const validarEmail = (email) => {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
@@ -57,7 +51,7 @@ function Registro() {
         }
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
         const newErrors = {}
         let valido = true
@@ -107,48 +101,70 @@ function Registro() {
             valido = false
         }
 
-        // Verificar si el correo o usuario ya existe
-        const usuarios = obtenerUsuarios()
-        if (usuarios.some(u => u.correo === formData.correo)) {
-            setMensaje({ texto: 'El correo ya está registrado.', tipo: 'danger' })
-            newErrors.correo = 'Este correo ya está registrado.'
-            valido = false
-        }
-        if (usuarios.some(u => u.usuario === formData.usuario)) {
-            setMensaje({ texto: 'El nombre de usuario ya está registrado.', tipo: 'danger' })
-            newErrors.usuario = 'Este nombre de usuario ya está registrado.'
-            valido = false
-        }
-
         if (!valido) {
             setErrors(newErrors)
             return
         }
 
-        // Guardar usuario
-        usuarios.push({
-            nombre: formData.nombre,
-            apellidoPaterno: formData.apellidoPaterno,
-            apellidoMaterno: formData.apellidoMaterno,
-            correo: formData.correo,
-            usuario: formData.usuario,
-            telefono: formData.telefono,
-            password: formData.password
-        })
-        guardarUsuarios(usuarios)
+        setCargando(true)
+        try {
+            // Enviar registro al backend
+            const response = await fetch(`${config.baseURL}/usuarios`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    nombre: formData.nombre,
+                    apellidoPaterno: formData.apellidoPaterno,
+                    apellidoMaterno: formData.apellidoMaterno,
+                    correo: formData.correo,
+                    username: formData.usuario,
+                    telefono: formData.telefono,
+                    password: formData.password
+                })
+            })
 
-        // Mostrar mensaje de éxito
-        setMensaje({ texto: '¡Registro exitoso! Ahora puedes iniciar sesión.', tipo: 'success' })
-        alert('¡Cuenta creada exitosamente! Serás redirigido al login para iniciar sesión.')
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}))
+                throw new Error(errorData.message || 'Error al registrar el usuario')
+            }
 
-        // Redirigir después de 2 segundos
-        setTimeout(() => {
-            navigate('/login')
-        }, 2000)
+            setToast({ 
+                texto: '¡Bienvenido! Tu cuenta ha sido creada. Redirigiendo a login...', 
+                tipo: 'success' 
+            })
+            
+            setTimeout(() => {
+                navigate('/login')
+            }, 2000)
+        } catch (error) {
+            console.error('Error en registro:', error)
+            setToast({ 
+                texto: error.message || 'Error al registrar. Intenta nuevamente.', 
+                tipo: 'danger' 
+            })
+            // Si es error de usuario duplicado, mostrar en el campo específico
+            if (error.message.includes('usuario')) {
+                setErrors(prev => ({...prev, usuario: error.message}))
+            } else if (error.message.includes('correo')) {
+                setErrors(prev => ({...prev, correo: error.message}))
+            }
+        } finally {
+            setCargando(false)
+        }
     }
 
     return (
-        <main className="container py-5" style={{ marginTop: '100px' }}>
+        <>
+            {toast && (
+                <Toast 
+                    mensaje={toast.texto} 
+                    tipo={toast.tipo}
+                    onClose={() => setToast(null)}
+                />
+            )}
+            <main className="container py-5" style={{ marginTop: '100px' }}>
             <div className="row justify-content-center">
                 <div className="col-lg-6 col-xl-5">
                     <div className="card border-0 shadow-lg bg-dark text-light" style={{borderTop: '3px solid #00ff88'}}>
@@ -310,8 +326,13 @@ function Registro() {
                                         <div className="text-danger mt-1" style={{ fontSize: '0.875em' }}>{errors.terminos}</div>
                                     )}
                                 </div>
-                                <button type="submit" className="btn fw-bold w-100 py-2" style={{ background: '#00ff88', color: '#0f172a' }}>
-                                    <i className="fas fa-user-plus me-2"></i> Crear Cuenta
+                                <button 
+                                    type="submit" 
+                                    className="btn fw-bold w-100 py-2" 
+                                    style={{ background: '#00ff88', color: '#0f172a' }}
+                                    disabled={cargando}
+                                >
+                                    <i className="fas fa-user-plus me-2"></i> {cargando ? 'Registrando...' : 'Crear Cuenta'}
                                 </button>
                             </form>
                             
@@ -325,7 +346,8 @@ function Registro() {
                     </div>
                 </div>
             </div>
-        </main>
+            </main>
+        </>
     )
 }
 

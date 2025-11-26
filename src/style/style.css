@@ -68,16 +68,18 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 0.5rem 0;
 }
 
 .navbar-brand:hover {
-    transform: scale(1.05);
-    filter: drop-shadow(0 0 12px rgba(0, 255, 136, 0.4));
+    transform: scale(1.08);
+    filter: drop-shadow(0 0 15px rgba(0, 255, 136, 0.5));
 }
 
 .navbar-brand img {
     object-fit: contain;
     transition: all 0.3s ease;
+    filter: drop-shadow(0 2px 8px rgba(0, 255, 136, 0.2));
 }
 
 .navbar .nav-link, .navbar-brand {
@@ -776,6 +778,10 @@ footer .fa-discord:hover {
     border: 2px solid #334155 !important;
     background: linear-gradient(135deg, #16213e 0%, #1a1a2e 100%);
     margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
 }
 
 .card-hover:hover {
@@ -800,6 +806,9 @@ footer .fa-discord:hover {
 
 .card-hover .card-body {
     color: #e2e8f0 !important;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 .card-hover .card-title {
@@ -812,6 +821,37 @@ footer .fa-discord:hover {
 
 .card-hover small {
     color: #94a3b8 !important;
+}
+
+.card-hover .btn {
+    transition: all 0.3s ease;
+}
+
+.card-hover .btn:hover {
+    transform: scale(1.02);
+}
+
+/* Botón REGISTRAR en navbar */
+.btn-registrar {
+    background: linear-gradient(135deg, #00ff88 0%, #00dd77 100%) !important;
+    color: #0f172a !important;
+    border: none !important;
+    border-radius: 6px !important;
+    padding: 0.6rem 1.2rem !important;
+    font-size: 0.95rem !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 12px rgba(0, 255, 136, 0.3) !important;
+}
+
+.btn-registrar:hover {
+    background: linear-gradient(135deg, #00dd77 0%, #00cc66 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(0, 255, 136, 0.5) !important;
+    color: #0f172a !important;
+}
+
+.btn-registrar:active {
+    transform: translateY(0) !important;
 }
 
 /* Paginación */

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { getUserData } from '../services/userDataService'
 import codigoService from '../services/codigoService'
+import config from '../config/api'
 import Logo from '../assets/Logo.png'
 
 function Perfil() {
@@ -95,10 +96,10 @@ function Perfil() {
                 return
             }
 
-            // Validar tamaño (máximo 5MB)
-            if (file.size > 5 * 1024 * 1024) {
+            // Validar tamaño (máximo 500KB)
+            if (file.size > 500 * 1024) {
                 setMensaje({
-                    texto: 'La imagen debe ser menor a 5MB',
+                    texto: 'La imagen debe ser menor a 500KB. Por favor usa una imagen más pequeña o comprimida.',
                     tipo: 'warning'
                 })
                 return
@@ -107,6 +108,14 @@ function Perfil() {
             // Convertir a base64
             const reader = new FileReader()
             reader.onloadend = () => {
+                // Validar tamaño del base64 (máximo ~500KB en base64)
+                if (reader.result.length > 700000) {
+                    setMensaje({
+                        texto: 'La imagen codificada es demasiado grande. Usa una imagen más pequeña.',
+                        tipo: 'warning'
+                    })
+                    return
+                }
                 setFotoPreview(reader.result)
                 setPerfilEdicion({
                     ...perfilEdicion,
@@ -128,6 +137,14 @@ function Perfil() {
             return
         }
 
+        if (!usuarioLocal || !usuarioLocal.username) {
+            setMensaje({
+                texto: 'Error: Usuario no identificado',
+                tipo: 'danger'
+            })
+            return
+        }
+
         // Validar username con solo letras y números
         if (perfilEdicion.username && !/^[a-zA-Z0-9_]+$/.test(perfilEdicion.username)) {
             setMensaje({
@@ -139,10 +156,27 @@ function Perfil() {
 
         setCargandoGuardar(true)
         try {
-            // Si cambió el username, verificar disponibilidad
+            // Construir objeto con solo los cambios
+            const cambios = {}
+            
+            // Solo agregar campos que cambiaron
+            if (perfilEdicion.nombre !== usuarioLocal.nombre) cambios.nombre = perfilEdicion.nombre
+            if (perfilEdicion.apellidoPaterno !== usuarioLocal.apellidoPaterno) cambios.apellidoPaterno = perfilEdicion.apellidoPaterno
+            if (perfilEdicion.apellidoMaterno !== usuarioLocal.apellidoMaterno) cambios.apellidoMaterno = perfilEdicion.apellidoMaterno
+            if (perfilEdicion.correo !== usuarioLocal.correo) cambios.correo = perfilEdicion.correo
+            if (perfilEdicion.telefono !== usuarioLocal.telefono) cambios.telefono = perfilEdicion.telefono
+            
+            // Verificar si hay foto nueva (siempre que sea diferente a la original)
+            if (perfilEdicion.fotoUrl) {
+                if (!usuarioLocal.fotoUrl || perfilEdicion.fotoUrl !== usuarioLocal.fotoUrl) {
+                    cambios.fotoUrl = perfilEdicion.fotoUrl
+                }
+            }
+            
             let nuevoUsername = perfilEdicion.username
             if (nuevoUsername && nuevoUsername !== usuarioLocal.username) {
-                const checkResponse = await fetch(`http://localhost:8080/api/usuarios/check-username/${nuevoUsername}`)
+                // Verificar disponibilidad del nuevo username
+                const checkResponse = await fetch(`${config.baseURL}/usuarios/check-username/${nuevoUsername}`)
                 if (checkResponse.ok) {
                     const data = await checkResponse.json()
                     if (data.exists) {
@@ -154,26 +188,33 @@ function Perfil() {
                         return
                     }
                 }
+                cambios.username = nuevoUsername
             }
 
-            const response = await fetch(`http://localhost:8080/api/usuarios/${usuarioLocal.username}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    username: nuevoUsername || usuarioLocal.username,
-                    nombre: perfilEdicion.nombre,
-                    apellidoPaterno: perfilEdicion.apellidoPaterno,
-                    apellidoMaterno: perfilEdicion.apellidoMaterno,
-                    correo: perfilEdicion.correo,
-                    telefono: perfilEdicion.telefono,
-                    fotoUrl: perfilEdicion.fotoUrl
+            // Si no hay cambios, mostrar mensaje
+            if (Object.keys(cambios).length === 0) {
+                setMensaje({
+                    texto: 'No hay cambios para guardar',
+                    tipo: 'info'
                 })
+                setCargandoGuardar(false)
+                return
+            }
+
+            // Usar FormData en lugar de JSON para manejar datos grandes (especialmente fotos)
+            const formData = new FormData()
+            Object.keys(cambios).forEach(key => {
+                formData.append(key, cambios[key])
+            })
+
+            const response = await fetch(`${config.baseURL}/usuarios/${usuarioLocal.username}`, {
+                method: 'PUT',
+                body: formData
             })
 
             if (!response.ok) {
-                throw new Error('Error al actualizar el perfil')
+                const errorData = await response.json().catch(() => ({}))
+                throw new Error(errorData.message || 'Error al actualizar el perfil')
             }
 
             const usuarioActualizado = await response.json()
@@ -185,6 +226,17 @@ function Perfil() {
             }
             localStorage.setItem('usuarioLogeado', JSON.stringify(usuarioActualizadoCompleto))
             setUsuarioLocal(usuarioActualizadoCompleto)
+
+            // Reinicializar formulario con datos actualizados
+            setPerfilEdicion({
+                nombre: usuarioActualizado.nombre || '',
+                apellidoPaterno: usuarioActualizado.apellidoPaterno || '',
+                apellidoMaterno: usuarioActualizado.apellidoMaterno || '',
+                correo: usuarioActualizado.correo || '',
+                telefono: usuarioActualizado.telefono || '',
+                username: usuarioActualizado.username || '',
+                fotoUrl: usuarioActualizado.fotoUrl || ''
+            })
 
             setMensaje({
                 texto: '✅ Perfil actualizado correctamente',

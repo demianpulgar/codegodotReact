@@ -239,35 +239,37 @@ function Comunidad() {
                                                 <div className="card-code-preview">
                                                     <CodePreview codigo={codigo.codigo ? codigo.codigo.substring(0, 200) : ''} />
                                                 </div>
-                                                <div className="card-body">
-                                                    <div className="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
-                                                        <small className="badge bg-info text-dark">{codigo.categoria || 'Sin categoría'}</small>
-                                                        <small className="text-muted">{codigo.fecha || 'Sin fecha'}</small>
+                                                <div className="card-body d-flex flex-column">
+                                                    <div className="d-flex justify-content-between align-items-start mb-2 gap-2">
+                                                        <small className="badge bg-info text-dark flex-shrink-0">{codigo.categoria || 'Sin categoría'}</small>
+                                                        <small className="text-muted text-end flex-shrink-0">{codigo.fecha || 'Sin fecha'}</small>
                                                     </div>
-                                                    <h5 className="card-title fw-bold">{codigo.titulo || 'Sin título'}</h5>
-                                                    <p className="card-text text-muted">
+                                                    <h5 className="card-title fw-bold mb-2" style={{minHeight: '3rem', display: 'flex', alignItems: 'center'}}>{codigo.titulo || 'Sin título'}</h5>
+                                                    <p className="card-text text-muted flex-grow-1 mb-3" style={{minHeight: '4rem'}}>
                                                         {codigo.descripcion ? codigo.descripcion.substring(0, 80) + '...' : 'Sin descripción'}
                                                     </p>
-                                                    <div className="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
+                                                    <div className="d-flex justify-content-between align-items-center mb-3 pt-2 border-top border-secondary">
                                                         <small className="text-muted">{codigo.autor || 'Anónimo'}</small>
                                                         <Link to={`/comunidad/${codigo.id}`} className="btn btn-sm btn-light fw-bold">
                                                             Ver más
                                                         </Link>
                                                     </div>
-                                                    <div className="d-flex gap-2 flex-wrap">
+                                                    <div className="d-grid gap-2">
                                                         <button
                                                             type="button"
-                                                            className={`btn btn-sm flex-grow-1 ${isLiked(codigo.id) ? 'btn-danger' : 'btn-outline-danger'}`}
+                                                            className={`btn btn-sm fw-bold ${isLiked(codigo.id) ? 'btn-danger' : 'btn-outline-danger'}`}
                                                             onClick={() => handleLike(codigo)}
+                                                            style={{minHeight: '2.5rem'}}
                                                         >
-                                                            <i className={`${isLiked(codigo.id) ? 'fas' : 'far'} fa-heart`}></i> {codigo.likes || 0}
+                                                            <i className={`${isLiked(codigo.id) ? 'fas' : 'far'} fa-heart me-1`}></i> Me gusta ({codigo.likes || 0})
                                                         </button>
                                                         <button
                                                             type="button"
-                                                            className={`btn btn-sm flex-grow-1 ${isSaved(codigo.id) ? 'btn-warning' : 'btn-outline-warning'}`}
+                                                            className={`btn btn-sm fw-bold ${isSaved(codigo.id) ? 'btn-warning' : 'btn-outline-warning'}`}
                                                             onClick={() => handleSave(codigo)}
+                                                            style={{minHeight: '2.5rem'}}
                                                         >
-                                                            <i className={`${isSaved(codigo.id) ? 'fas' : 'far'} fa-bookmark`}></i> {codigo.guardados || 0}
+                                                            <i className={`${isSaved(codigo.id) ? 'fas' : 'far'} fa-bookmark me-1`}></i> Guardar ({codigo.guardados || 0})
                                                         </button>
                                                     </div>
                                                 </div>
