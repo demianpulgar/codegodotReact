@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import Logo from '../assets/Logo.png'
+import Logo from '../assets/Logo.svg'
 
 function Navbar() {
     const [usuarioLogueado, setUsuarioLogueado] = useState(null)
+    const [navOpen, setNavOpen] = useState(false)
 
     useEffect(() => {
         // Verificar si hay usuario logueado
@@ -33,6 +34,7 @@ function Navbar() {
                 navbarCollapse.classList.remove('show')
             }
         }
+        setNavOpen(false)
     }
 
     const handleLogout = () => {
@@ -45,39 +47,47 @@ function Navbar() {
     return (
         <nav className="navbar navbar-expand-lg fixed-top">
             <div className="container-fluid">
-                <Link className="navbar-brand" to="/">
+                <Link className="navbar-brand" to="/" onClick={cerrarNavbar}>
                     <img src={Logo} alt="CodeGodot Logo" className="d-none d-md-block" style={{height: '60px', width: 'auto'}} />
                     <img src={Logo} alt="CodeGodot Logo" className="d-md-none" style={{height: '40px', width: 'auto'}} />
                 </Link>
-                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <button 
+                    className="navbar-toggler" 
+                    type="button" 
+                    data-bs-toggle="collapse" 
+                    data-bs-target="#navbarNav"
+                    aria-controls="navbarNav"
+                    aria-expanded={navOpen}
+                    aria-label="Toggle navigation"
+                    onClick={() => setNavOpen(!navOpen)}
+                >
                     <span className="navbar-toggler-icon"></span>
                 </button>
                 <div className="collapse navbar-collapse" id="navbarNav">
                     <ul className="navbar-nav ms-auto">
                         <li className="nav-item">
-                            <Link className="nav-link text-white" to="/" onClick={cerrarNavbar}>INICIO</Link>
+                            <Link className="nav-link" to="/" onClick={cerrarNavbar}>INICIO</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link text-white" to="/que-es-godot" onClick={cerrarNavbar}>¿QUÉ ES GODOT?</Link>
+                            <Link className="nav-link" to="/que-es-godot" onClick={cerrarNavbar}>¿QUÉ ES GODOT?</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link text-white" to="/tutorial" onClick={cerrarNavbar}>TUTORIAL</Link>
+                            <Link className="nav-link" to="/tutorial" onClick={cerrarNavbar}>TUTORIAL</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link text-white" to="/comunidad" onClick={cerrarNavbar}>COMUNIDAD</Link>
+                            <Link className="nav-link" to="/comunidad" onClick={cerrarNavbar}>COMUNIDAD</Link>
                         </li>
                         {usuarioLogueado ? (
                             <>
                                 <li className="nav-item">
-                                    <Link className="nav-link text-white" to="/perfil" onClick={cerrarNavbar}>
+                                    <Link className="nav-link" to="/perfil" onClick={cerrarNavbar}>
                                         <i className="fas fa-user me-1"></i> MI PERFIL
                                     </Link>
                                 </li>
                                 <li className="nav-item">
                                     <button 
-                                        className="btn btn-light fw-bold ms-2 px-3" 
+                                        className="btn btn-light fw-bold px-3" 
                                         onClick={handleLogout}
-                                        style={{color: '#1a5490'}}
                                     >
                                         CERRAR SESIÓN
                                     </button>
@@ -86,10 +96,10 @@ function Navbar() {
                         ) : (
                             <>
                                 <li className="nav-item">
-                                    <Link className="nav-link text-white" to="/login" onClick={cerrarNavbar}>INICIO SESIÓN</Link>
+                                    <Link className="nav-link" to="/login" onClick={cerrarNavbar}>INICIO SESIÓN</Link>
                                 </li>
                                 <li className="nav-item">
-                                    <Link className="btn btn-light fw-bold ms-2 px-3" to="/registro" style={{color: '#1a5490'}} onClick={cerrarNavbar}>REGISTRAR</Link>
+                                    <Link className="btn btn-light fw-bold px-3" to="/registro" onClick={cerrarNavbar}>REGISTRAR</Link>
                                 </li>
                             </>
                         )}

@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import { toggleLike, toggleSave, getUserData } from '../services/userDataService'
 import codigoService from '../services/codigoService'
 import { codigosData } from '../data/codigosData'
-import Logo from '../assets/Logo.png'
+import Logo from '../assets/Logo.svg'
 
 function DetalleCode() {
     const { id } = useParams()

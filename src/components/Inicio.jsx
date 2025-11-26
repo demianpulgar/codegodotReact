@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import Logo from '../assets/Logo.png'
+import Logo from '../assets/Logo.svg'
 import Godot from '../assets/Godot.png'
 
 function Inicio() {
