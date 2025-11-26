@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { codigosData } from '../data/codigosData'
 import { useAuth } from '../context/AuthContext'
@@ -8,7 +8,6 @@ import CodePreview from './CodePreview'
 import LoginPromptModal from './LoginPromptModal'
 
 function Comunidad() {
-    const navigate = useNavigate()
     const { user } = useAuth()
     const [paginaActual, setPaginaActual] = useState(1)
     const [codigos, setCodigos] = useState(codigosData && Array.isArray(codigosData) ? codigosData : [])
