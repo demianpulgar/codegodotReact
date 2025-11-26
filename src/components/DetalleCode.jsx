@@ -149,24 +149,28 @@ function DetalleCode() {
                 <div className="code-header mb-4">
                     <div className="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-3">
                         <div className="w-100">
-                            <h1 className="fw-bold mb-2">{codigoActual.titulo}</h1>
+                            <h1 className="fw-bold mb-2" style={{color: '#00ff88'}}>{codigoActual.titulo}</h1>
                             <div className="d-flex flex-wrap gap-3">
-                                <span className="badge bg-primary">{codigoActual.categoria}</span>
-                                <span className="text-muted">{codigoActual.fecha}</span>
+                                <span className="badge bg-info text-dark">{codigoActual.categoria}</span>
+                                <span style={{color: '#94a3b8'}}>{codigoActual.fecha}</span>
                             </div>
                         </div>
                         <div className="d-flex gap-2 flex-shrink-0">
                             <button 
-                                className={`btn btn-sm ${liked ? 'btn-danger' : 'btn-outline-danger'}`}
+                                className={`btn btn-sm fw-bold ${liked ? 'btn-danger' : 'btn-outline-danger'}`}
                                 onClick={handleLike}
+                                title="Me gusta"
                             >
-                                <i className={`${liked ? 'fas' : 'far'} fa-heart`}></i> {codigoActual.likes + (liked ? 1 : 0)}
+                                <i className={`${liked ? 'fas' : 'far'} fa-heart me-1`}></i> 
+                                {codigoActual.likes || 0}
                             </button>
                             <button 
-                                className={`btn btn-sm ${saved ? 'btn-warning' : 'btn-outline-warning'}`}
+                                className={`btn btn-sm fw-bold ${saved ? 'btn-warning' : 'btn-outline-warning'}`}
                                 onClick={handleSave}
+                                title="Guardar"
                             >
-                                <i className={`${saved ? 'fas' : 'far'} fa-bookmark`}></i>
+                                <i className={`${saved ? 'fas' : 'far'} fa-bookmark me-1`}></i>
+                                {codigoActual.guardados || 0}
                             </button>
                         </div>
                     </div>
@@ -179,22 +183,22 @@ function DetalleCode() {
                             className="rounded-circle autor-avatar"
                         />
                         <div>
-                            <p className="mb-0 fw-bold">{codigoActual.autor}</p>
-                            <small className="text-muted">Desarrollador verificado</small>
+                            <p className="mb-0 fw-bold" style={{color: '#00ff88'}}>{codigoActual.autor}</p>
+                            <small style={{color: '#94a3b8'}}>Desarrollador verificado</small>
                         </div>
                     </div>
                 </div>
 
                 {/* Descripción */}
                 <div className="code-description mb-4">
-                    <h4 className="fw-bold mb-3">Descripción</h4>
-                    <p>{codigoActual.descripcion}</p>
+                    <h4 className="fw-bold mb-3" style={{color: '#00ff88'}}>Descripción</h4>
+                    <p style={{color: '#e2e8f0', lineHeight: '1.6'}}>{codigoActual.descripcion}</p>
                 </div>
 
                 {/* Bloque de código */}
                 <div className="code-block mb-4">
                     <div className="d-flex justify-content-between align-items-center mb-2">
-                        <h4 className="fw-bold mb-0">Código</h4>
+                        <h4 className="fw-bold mb-0" style={{color: '#00ff88'}}>Código</h4>
                         <button className="btn btn-outline-light btn-sm" onClick={copiarCodigo}>
                             <i className="far fa-copy"></i> Copiar código
                         </button>
@@ -206,7 +210,7 @@ function DetalleCode() {
 
                 {/* Sección de comentarios */}
                 <div className="comments-section">
-                    <h4 className="fw-bold mb-4">Comentarios ({comentariosEjemplo.length})</h4>
+                    <h4 className="fw-bold mb-4" style={{color: '#00ff88'}}>Comentarios ({comentariosEjemplo.length})</h4>
                     
                     {/* Formulario nuevo comentario */}
                     <form onSubmit={handleSubmitComentario} className="mb-4">
@@ -217,15 +221,18 @@ function DetalleCode() {
                                 placeholder="Escribe un comentario..."
                                 value={nuevoComentario}
                                 onChange={(e) => setNuevoComentario(e.target.value)}
+                                style={{backgroundColor: '#0f172a', color: '#e2e8f0', borderColor: '#334155'}}
                             ></textarea>
                         </div>
-                        <button type="submit" className="btn btn-primary">Publicar comentario</button>
+                        <button type="submit" className="btn btn-success fw-bold">
+                            <i className="fas fa-paper-plane me-2"></i>Publicar comentario
+                        </button>
                     </form>
 
                     {/* Lista de comentarios */}
                     <div className="comments-list">
                         {comentariosEjemplo.map((comentario) => (
-                            <div key={comentario.id} className="comment-item mb-3">
+                            <div key={comentario.id} className="comment-item mb-3" style={{backgroundColor: 'rgba(0, 255, 136, 0.05)', padding: '1rem', borderRadius: '8px', borderLeft: '3px solid #00ff88'}}>
                                 <div className="d-flex gap-2">
                                     <img 
                                         src={Logo} 
@@ -235,11 +242,11 @@ function DetalleCode() {
                                     <div className="flex-grow-1">
                                         <div className="d-flex justify-content-between align-items-start">
                                             <div>
-                                                <p className="mb-0 fw-bold">{comentario.autor}</p>
+                                                <p className="mb-0 fw-bold" style={{color: '#00ff88'}}>{comentario.autor}</p>
                                                 <small className="text-muted">{comentario.fecha}</small>
                                             </div>
                                         </div>
-                                        <p className="mt-2 mb-0">{comentario.texto}</p>
+                                        <p className="mt-2 mb-0" style={{color: '#cbd5e1'}}>{comentario.texto}</p>
                                     </div>
                                 </div>
                             </div>

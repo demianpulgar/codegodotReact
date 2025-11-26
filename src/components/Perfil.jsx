@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { getUserData } from '../services/userDataService'
 import codigoService from '../services/codigoService'
@@ -19,6 +19,11 @@ function Perfil() {
     const [tabs, setTabs] = useState('likes') // 'likes', 'guardados'
     const [mensaje, setMensaje] = useState({ texto: '', tipo: '' })
     const [fotoPreview, setFotoPreview] = useState(null)
+
+    // Scroll a top cuando cambia el tab
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+    }, [tabs])
 
     useEffect(() => {
         // Verificar si hay usuario logueado
@@ -477,20 +482,25 @@ function Perfil() {
                             <div className="row">
                                 {codigosLikeados.map(codigo => (
                                     <div key={codigo.id} className="col-md-6 col-lg-4 mb-4">
-                                        <div className="favorite-card h-100">
-                                            <div className="favorite-card-header">
-                                                <span className="badge bg-info">{codigo.categoria}</span>
-                                                <span className="favorite-icon">
-                                                    <i className="fas fa-heart" style={{color: '#ff4757'}}></i>
-                                                </span>
+                                        <Link 
+                                            to={`/comunidad/${codigo.id}`} 
+                                            style={{textDecoration: 'none', color: 'inherit'}}
+                                        >
+                                            <div className="favorite-card h-100" style={{cursor: 'pointer', transition: 'all 0.3s ease'}}>
+                                                <div className="favorite-card-header">
+                                                    <span className="badge bg-info">{codigo.categoria}</span>
+                                                    <span className="favorite-icon">
+                                                        <i className="fas fa-heart" style={{color: '#ff4757'}}></i>
+                                                    </span>
+                                                </div>
+                                                <h6 className="favorite-card-title">{codigo.titulo}</h6>
+                                                <p className="favorite-card-desc">{codigo.descripcion?.substring(0, 80)}...</p>
+                                                <div className="favorite-card-footer">
+                                                    <small className="text-muted">{codigo.autor}</small>
+                                                    <small className="text-muted">{codigo.fecha}</small>
+                                                </div>
                                             </div>
-                                            <h6 className="favorite-card-title">{codigo.titulo}</h6>
-                                            <p className="favorite-card-desc">{codigo.descripcion?.substring(0, 80)}...</p>
-                                            <div className="favorite-card-footer">
-                                                <small className="text-muted">{codigo.autor}</small>
-                                                <small className="text-muted">{codigo.fecha}</small>
-                                            </div>
-                                        </div>
+                                        </Link>
                                     </div>
                                 ))}
                             </div>
@@ -521,20 +531,25 @@ function Perfil() {
                             <div className="row">
                                 {codigosGuardados.map(codigo => (
                                     <div key={codigo.id} className="col-md-6 col-lg-4 mb-4">
-                                        <div className="favorite-card h-100">
-                                            <div className="favorite-card-header">
-                                                <span className="badge bg-warning">{codigo.categoria}</span>
-                                                <span className="favorite-icon">
-                                                    <i className="fas fa-bookmark" style={{color: '#ffa502'}}></i>
-                                                </span>
+                                        <Link 
+                                            to={`/comunidad/${codigo.id}`} 
+                                            style={{textDecoration: 'none', color: 'inherit'}}
+                                        >
+                                            <div className="favorite-card h-100" style={{cursor: 'pointer', transition: 'all 0.3s ease'}}>
+                                                <div className="favorite-card-header">
+                                                    <span className="badge bg-warning">{codigo.categoria}</span>
+                                                    <span className="favorite-icon">
+                                                        <i className="fas fa-bookmark" style={{color: '#ffa502'}}></i>
+                                                    </span>
+                                                </div>
+                                                <h6 className="favorite-card-title">{codigo.titulo}</h6>
+                                                <p className="favorite-card-desc">{codigo.descripcion?.substring(0, 80)}...</p>
+                                                <div className="favorite-card-footer">
+                                                    <small className="text-muted">{codigo.autor}</small>
+                                                    <small className="text-muted">{codigo.fecha}</small>
+                                                </div>
                                             </div>
-                                            <h6 className="favorite-card-title">{codigo.titulo}</h6>
-                                            <p className="favorite-card-desc">{codigo.descripcion?.substring(0, 80)}...</p>
-                                            <div className="favorite-card-footer">
-                                                <small className="text-muted">{codigo.autor}</small>
-                                                <small className="text-muted">{codigo.fecha}</small>
-                                            </div>
-                                        </div>
+                                        </Link>
                                     </div>
                                 ))}
                             </div>

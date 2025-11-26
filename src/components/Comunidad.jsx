@@ -20,6 +20,7 @@ function Comunidad() {
     const [error, setError] = useState(null)
     const [userLikesState, setUserLikesState] = useState(new Set())
     const [userSavesState, setUserSavesState] = useState(new Set())
+    const [ordenamiento, setOrdenamiento] = useState('reciente')
     const codigosPorPagina = 9
 
     // Cargar datos desde la API
@@ -51,7 +52,7 @@ function Comunidad() {
         }
     }, [user])
 
-    // Filtrado combinado: búsqueda + categoría
+    // Filtrado combinado: búsqueda + categoría + ordenamiento
     useEffect(() => {
         if (!codigosOriginales || codigosOriginales.length === 0) {
             setCodigos([])
@@ -74,14 +75,48 @@ function Comunidad() {
             )
         }
 
+        // Aplicar ordenamiento
+        switch(ordenamiento) {
+            case 'likes-desc':
+                filtrados.sort((a, b) => (b.likes || 0) - (a.likes || 0))
+                break
+            case 'likes-asc':
+                filtrados.sort((a, b) => (a.likes || 0) - (b.likes || 0))
+                break
+            case 'guardados-desc':
+                filtrados.sort((a, b) => (b.guardados || 0) - (a.guardados || 0))
+                break
+            case 'guardados-asc':
+                filtrados.sort((a, b) => (a.guardados || 0) - (b.guardados || 0))
+                break
+            case 'fecha-desc':
+                // Más antiguo primero (fecha menor = más viejo)
+                filtrados.sort((a, b) => {
+                    const fechaA = a.fecha ? new Date(a.fecha).getTime() : 0
+                    const fechaB = b.fecha ? new Date(b.fecha).getTime() : 0
+                    return fechaA - fechaB
+                })
+                break
+            case 'reciente':
+            default:
+                // Más reciente primero (fecha mayor = más nuevo)
+                filtrados.sort((a, b) => {
+                    const fechaA = a.fecha ? new Date(a.fecha).getTime() : 0
+                    const fechaB = b.fecha ? new Date(b.fecha).getTime() : 0
+                    return fechaB - fechaA
+                })
+                break
+        }
+
         setCodigos(filtrados)
         setPaginaActual(1)
-    }, [busqueda, selectedCategory, codigosOriginales])
+    }, [busqueda, selectedCategory, codigosOriginales, ordenamiento])
 
     // Limpiar búsqueda y filtros
     const limpiarFiltros = () => {
         setBusqueda('')
         setSelectedCategory(null)
+        setOrdenamiento('reciente')
         setPaginaActual(1)
     }
     
@@ -178,22 +213,32 @@ function Comunidad() {
             {/* Sección de Códigos */}
             <section className="comunidad-section">
                 <div className="container">
-                    {/* Filtro de categorías */}
-                    <div className="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
-                        <div>
+                    {/* Filtro de categorías y ordenamiento */}
+                    <div className="row align-items-start mb-4">
+                        <div className="col-12 col-md-8 mb-3 mb-md-0">
                             <CategoryFilter 
                                 selectedCategory={selectedCategory}
                                 onCategoryChange={setSelectedCategory}
+                                ordenamiento={ordenamiento}
+                                onOrdenamientoChange={setOrdenamiento}
+                                onClearFilters={() => {
+                                    setBusqueda('')
+                                    setSelectedCategory(null)
+                                    setOrdenamiento('reciente')
+                                    setPaginaActual(1)
+                                }}
                             />
                         </div>
-                        {(busqueda || selectedCategory) && (
-                            <button 
-                                className="btn btn-outline-light btn-sm"
-                                onClick={limpiarFiltros}
-                            >
-                                <i className="fas fa-times"></i> Limpiar filtros
-                            </button>
-                        )}
+                        <div className="col-12 col-md-4">
+                            {(busqueda || selectedCategory || ordenamiento !== 'reciente') && (
+                                <button 
+                                    className="btn btn-outline-danger btn-sm w-100"
+                                    onClick={limpiarFiltros}
+                                >
+                                    <i className="fas fa-times"></i> Limpiar todo
+                                </button>
+                            )}
+                        </div>
                     </div>
 
                     <h2 className="fw-bold mb-4">
@@ -235,11 +280,11 @@ function Comunidad() {
                                 {codigosActuales.map((codigo) => (
                                     codigo && codigo.id ? (
                                         <div className="col-12 col-sm-6 col-lg-4 mb-4" key={codigo.id}>
-                                            <div className="card h-100 shadow-sm card-hover">
-                                                <div className="card-code-preview">
+                                            <div className="card h-100 shadow-sm card-hover" style={{cursor: 'pointer', transition: 'all 0.3s ease'}}>
+                                                <div className="card-code-preview" onClick={() => window.location.href = `/comunidad/${codigo.id}`}>
                                                     <CodePreview codigo={codigo.codigo ? codigo.codigo.substring(0, 200) : ''} />
                                                 </div>
-                                                <div className="card-body d-flex flex-column">
+                                                <div className="card-body d-flex flex-column" onClick={() => window.location.href = `/comunidad/${codigo.id}`} style={{cursor: 'pointer'}}>
                                                     <div className="d-flex justify-content-between align-items-start mb-2 gap-2">
                                                         <small className="badge bg-info text-dark flex-shrink-0">{codigo.categoria || 'Sin categoría'}</small>
                                                         <small className="text-muted text-end flex-shrink-0">{codigo.fecha || 'Sin fecha'}</small>
@@ -254,24 +299,22 @@ function Comunidad() {
                                                             Ver más
                                                         </Link>
                                                     </div>
-                                                    <div className="d-grid gap-2">
-                                                        <button
-                                                            type="button"
-                                                            className={`btn btn-sm fw-bold ${isLiked(codigo.id) ? 'btn-danger' : 'btn-outline-danger'}`}
-                                                            onClick={() => handleLike(codigo)}
-                                                            style={{minHeight: '2.5rem'}}
-                                                        >
-                                                            <i className={`${isLiked(codigo.id) ? 'fas' : 'far'} fa-heart me-1`}></i> Me gusta ({codigo.likes || 0})
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            className={`btn btn-sm fw-bold ${isSaved(codigo.id) ? 'btn-warning' : 'btn-outline-warning'}`}
-                                                            onClick={() => handleSave(codigo)}
-                                                            style={{minHeight: '2.5rem'}}
-                                                        >
-                                                            <i className={`${isSaved(codigo.id) ? 'fas' : 'far'} fa-bookmark me-1`}></i> Guardar ({codigo.guardados || 0})
-                                                        </button>
-                                                    </div>
+                                                </div>
+                                                <div className="card-body pt-0 d-grid gap-2">
+                                                    <button
+                                                        type="button"
+                                                        className={`btn btn-sm fw-bold ${isLiked(codigo.id) ? 'btn-danger' : 'btn-outline-danger'}`}
+                                                        onClick={() => handleLike(codigo)}
+                                                    >
+                                                        <i className={`${isLiked(codigo.id) ? 'fas' : 'far'} fa-heart me-1`}></i> Me gusta ({codigo.likes || 0})
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        className={`btn btn-sm fw-bold ${isSaved(codigo.id) ? 'btn-warning' : 'btn-outline-warning'}`}
+                                                        onClick={() => handleSave(codigo)}
+                                                    >
+                                                        <i className={`${isSaved(codigo.id) ? 'fas' : 'far'} fa-bookmark me-1`}></i> Guardar ({codigo.guardados || 0})
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
