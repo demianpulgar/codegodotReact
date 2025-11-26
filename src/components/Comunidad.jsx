@@ -70,26 +70,16 @@ function Comunidad() {
                         Podrás buscar por lo que te interesa, los gustos que te apasionen y ahorrar todo el tiempo del mundo :). 
                     </p>
 
-                    {/* Mensaje de estado */}
-                    {/* error && (
-                        <div className="alert alert-warning" role="alert">
-                            {error}
-                        </div>
-                    ) */}
-
-                    {/* Sección de búsqueda simple */}
+                    {/* Sección de búsqueda */}
                     <div className="row justify-content-center mb-4">
                         <div className="col-12 col-md-10 col-lg-8">
-                            <div className="d-flex flex-column flex-sm-row gap-2">
-                                <input 
-                                    type="text" 
-                                    className="form-control flex-grow-1" 
-                                    placeholder="Buscar por título o descripción..." 
-                                    value={busqueda}
-                                    onChange={(e) => setBusqueda(e.target.value)}
-                                    onKeyPress={(e) => e.key === 'Enter' && true}
-                                />
-                            </div>
+                            <input 
+                                type="text" 
+                                className="form-control" 
+                                placeholder="Buscar por título o descripción..." 
+                                value={busqueda}
+                                onChange={(e) => setBusqueda(e.target.value)}
+                            />
                         </div>
                     </div>
                 </div>
@@ -98,9 +88,9 @@ function Comunidad() {
             {/* Sección de Códigos */}
             <section className="comunidad-section">
                 <div className="container">
-                    {/* Filtro de categorías - Dropdown */}
-                    <div className="d-flex justify-content-between align-items-flex-start flex-wrap gap-3 mb-4" style={{ position: 'relative', zIndex: '1050' }}>
-                        <div style={{ position: 'relative' }}>
+                    {/* Filtro de categorías */}
+                    <div className="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+                        <div>
                             <CategoryFilter 
                                 selectedCategory={selectedCategory}
                                 onCategoryChange={setSelectedCategory}
@@ -142,106 +132,115 @@ function Comunidad() {
                             {/* Grid de tarjetas */}
                             <div className="row mb-4">
                                 {codigosActuales.map((codigo) => (
-                            <div className="col-12 col-sm-6 col-lg-4 mb-4" key={codigo.id}>
-                                <div className="card h-100 shadow-sm card-hover">
-                                    <div className="card-code-preview">
-                                        <CodePreview codigo={codigo.código.substring(0, 200)} />
+                                    <div className="col-12 col-sm-6 col-lg-4 mb-4" key={codigo.id}>
+                                        <div className="card h-100 shadow-sm card-hover">
+                                            <div className="card-code-preview">
+                                                <CodePreview codigo={codigo.código.substring(0, 200)} />
+                                            </div>
+                                            <div className="card-body">
+                                                <div className="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+                                                    <small className="badge bg-info text-dark">{codigo.categoria}</small>
+                                                    <small className="text-muted">{codigo.fecha}</small>
+                                                </div>
+                                                <h5 className="card-title fw-bold">{codigo.titulo}</h5>
+                                                <p className="card-text text-muted">{codigo.descripcion.substring(0, 80)}...</p>
+                                                <div className="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
+                                                    <small className="text-muted">{codigo.autor}</small>
+                                                    <Link to={`/comunidad/${codigo.id}`} className="btn btn-sm btn-light fw-bold">
+                                                        Ver más
+                                                    </Link>
+                                                </div>
+                                                <div className="d-flex gap-2 flex-wrap">
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-sm btn-outline-danger flex-grow-1"
+                                                        onClick={() => {
+                                                            if (!user) { 
+                                                                alert('Inicia sesión para dar me gusta')
+                                                                navigate('/login')
+                                                                return 
+                                                            }
+                                                            toggleLike(user.username, codigo.id)
+                                                        }}
+                                                    >
+                                                        <i className="far fa-heart"></i> {codigo.likes}
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-sm btn-outline-warning flex-grow-1"
+                                                        onClick={() => {
+                                                            if (!user) { 
+                                                                alert('Inicia sesión para guardar')
+                                                                navigate('/login')
+                                                                return 
+                                                            }
+                                                            toggleSave(user.username, codigo.id)
+                                                        }}
+                                                    >
+                                                        <i className="far fa-bookmark"></i> {codigo.guardados}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="card-body">
-                                        <div className="d-flex justify-content-between align-items-center mb-2 flex-wrap">
-                                            <small className="badge bg-info text-dark">{codigo.categoria}</small>
-                                            <small className="text-muted">{codigo.fecha}</small>
-                                        </div>
-                                        <h5 className="card-title fw-bold">{codigo.titulo}</h5>
-                                        <p className="card-text text-muted text-truncate">{codigo.descripcion}</p>
-                                        <div className="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                                            <small className="text-muted">{codigo.autor}</small>
-                                            <Link to={`/comunidad/${codigo.id}`} className="btn btn-sm btn-light fw-bold">
-                                                Ver más
-                                            </Link>
-                                        </div>
-                                        <div className="d-flex gap-2 mt-2 flex-wrap">
-                                            <button
-                                                type="button"
-                                                className="btn btn-sm btn-outline-danger flex-grow-1"
-                                                onClick={(e) => {
-                                                    e.preventDefault()
-                                                    if (!user) { alert('Inicia sesión para dar me gusta'); navigate('/login'); return }
-                                                    toggleLike(user.username, codigo.id)
-                                                }}
-                                            >
-                                                <i className="far fa-heart"></i> {codigo.likes}
-                                            </button>
-                                            <button
-                                                type="button"
-                                                className="btn btn-sm btn-outline-warning flex-grow-1"
-                                                onClick={(e) => {
-                                                    e.preventDefault()
-                                                    if (!user) { alert('Inicia sesión para guardar'); navigate('/login'); return }
-                                                    toggleSave(user.username, codigo.id)
-                                                }}
-                                            >
-                                                <i className="far fa-bookmark"></i> {codigo.guardados}
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* Paginación */}
-                    {totalPaginas > 1 && (
-                        <nav className="d-flex justify-content-center mb-5">
-                            <ul className="pagination">
-                                {/* Botón anterior */}
-                                <li className={`page-item ${paginaActual === 1 ? 'disabled' : ''}`}>
-                                    <button 
-                                        className="page-link" 
-                                        onClick={() => cambiarPagina(paginaActual - 1)}
-                                        disabled={paginaActual === 1}
-                                    >
-                                        Anterior
-                                    </button>
-                                </li>
-
-                                {/* Números de página */}
-                                {[...Array(totalPaginas)].map((_, index) => (
-                                    <li 
-                                        key={index + 1} 
-                                        className={`page-item ${paginaActual === index + 1 ? 'active' : ''}`}
-                                    >
-                                        <button 
-                                            className="page-link" 
-                                            onClick={() => cambiarPagina(index + 1)}
-                                        >
-                                            {index + 1}
-                                        </button>
-                                    </li>
                                 ))}
+                            </div>
 
-                                {/* Botón siguiente */}
-                                <li className={`page-item ${paginaActual === totalPaginas ? 'disabled' : ''}`}>
-                                    <button 
-                                        className="page-link" 
-                                        onClick={() => cambiarPagina(paginaActual + 1)}
-                                        disabled={paginaActual === totalPaginas}
-                                    >
-                                        Siguiente
-                                    </button>
-                                </li>
-                            </ul>
-                        </nav>
-                    )}
+                            {/* Paginación */}
+                            {totalPaginas > 1 && (
+                                <nav className="d-flex justify-content-center mb-5">
+                                    <ul className="pagination">
+                                        <li className={`page-item ${paginaActual === 1 ? 'disabled' : ''}`}>
+                                            <button 
+                                                className="page-link" 
+                                                onClick={() => cambiarPagina(paginaActual - 1)}
+                                                disabled={paginaActual === 1}
+                                            >
+                                                Anterior
+                                            </button>
+                                        </li>
+
+                                        {[...Array(totalPaginas)].map((_, index) => (
+                                            <li 
+                                                key={index + 1} 
+                                                className={`page-item ${paginaActual === index + 1 ? 'active' : ''}`}
+                                            >
+                                                <button 
+                                                    className="page-link" 
+                                                    onClick={() => cambiarPagina(index + 1)}
+                                                >
+                                                    {index + 1}
+                                                </button>
+                                            </li>
+                                        ))}
+
+                                        <li className={`page-item ${paginaActual === totalPaginas ? 'disabled' : ''}`}>
+                                            <button 
+                                                className="page-link" 
+                                                onClick={() => cambiarPagina(paginaActual + 1)}
+                                                disabled={paginaActual === totalPaginas}
+                                            >
+                                                Siguiente
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            )}
                         </>
                     )}
-                    <div className="row mt-5">
-                        <div className="col-lg-6">
+
+                    {/* CTA Section */}
+                    <div className="row mt-5 pt-5 border-top border-secondary">
+                        <div className="col-lg-6 mb-4 mb-lg-0">
                             <h2 className="fw-bold mb-3">¿Quieres publicar tus códigos?</h2>
-                            <p className="mb-4">Si quieres ser parte de los creadores de contenido contactanos con nosotros y te ayudaremos a gestionar y evaluar para obtener a qué día beneficio!</p>
-                            <button className="btn btn-light fw-bold px-4 py-2">Contactar</button>
+                            <p className="text-muted mb-4">
+                                Si quieres ser parte de los creadores de contenido, contáctanos con nosotros y te ayudaremos a gestionar y evaluar para obtener a qué día beneficio!
+                            </p>
+                            <button className="btn btn-light fw-bold px-4 py-2">
+                                Contactar
+                            </button>
                         </div>
-                        <div className="col-lg-6 text-center">
+                        <div className="col-lg-6">
                             <div className="cta-code-display">
                                 <CodePreview codigo={`# Comparte tus mejores snippets\nfunc _ready():\n    print("Únete a CodeGodot")\n    # Y ayuda a otros a aprender`} />
                             </div>
