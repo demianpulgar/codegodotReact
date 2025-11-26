@@ -5,6 +5,7 @@ import { toggleLike, toggleSave, getUserData } from '../services/userDataService
 import codigoService from '../services/codigoService'
 import { codigosData } from '../data/codigosData'
 import Logo from '../assets/Logo.svg'
+import LoginPromptModal from './LoginPromptModal'
 
 function DetalleCode() {
     const { id } = useParams()
@@ -55,6 +56,8 @@ function DetalleCode() {
     const [nuevoComentario, setNuevoComentario] = useState('')
     const [liked, setLiked] = useState(false)
     const [saved, setSaved] = useState(false)
+    const [showLoginPrompt, setShowLoginPrompt] = useState(false)
+    const [loginAction, setLoginAction] = useState('Dar me gusta')
 
     useEffect(() => {
         if (user) {
@@ -76,8 +79,8 @@ function DetalleCode() {
 
     const handleLike = () => {
         if (!user) {
-            alert('Inicia sesión para dar me gusta')
-            navigate('/login')
+            setLoginAction('dar me gusta a este código')
+            setShowLoginPrompt(true)
             return
         }
         const likes = toggleLike(user.username, parseInt(id))
@@ -86,8 +89,8 @@ function DetalleCode() {
 
     const handleSave = () => {
         if (!user) {
-            alert('Inicia sesión para guardar')
-            navigate('/login')
+            setLoginAction('guardar este código')
+            setShowLoginPrompt(true)
             return
         }
         const saves = toggleSave(user.username, parseInt(id))
@@ -244,6 +247,13 @@ function DetalleCode() {
                     </div>
                 </div>
             </div>
+
+            {/* Modal de Login */}
+            <LoginPromptModal 
+                isOpen={showLoginPrompt}
+                onClose={() => setShowLoginPrompt(false)}
+                action={loginAction}
+            />
         </div>
     )
 }

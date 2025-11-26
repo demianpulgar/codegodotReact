@@ -170,7 +170,7 @@ function Comunidad() {
                                         <div className="col-12 col-sm-6 col-lg-4 mb-4" key={codigo.id}>
                                             <div className="card h-100 shadow-sm card-hover">
                                                 <div className="card-code-preview">
-                                                    <CodePreview codigo={codigo.código ? codigo.código.substring(0, 200) : ''} />
+                                                    <CodePreview codigo={codigo.codigo ? codigo.codigo.substring(0, 200) : ''} />
                                                 </div>
                                                 <div className="card-body">
                                                     <div className="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
