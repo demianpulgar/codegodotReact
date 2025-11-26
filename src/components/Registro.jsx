@@ -151,12 +151,11 @@ function Registro() {
         <main className="container py-5" style={{ marginTop: '100px' }}>
             <div className="row justify-content-center">
                 <div className="col-lg-6 col-xl-5">
-                    <div className="card border-0 shadow-sm bg-light">
-                        <div className="card-body p-4">
-                            <h3 className="fw-bold mb-3">Crea tu Cuenta</h3>
-                            <p className="text-muted mb-4" style={{ fontSize: '0.9em' }}>
-                                Crea tu cuenta para entrar al mundo de la sencillez y rapidez, donde podrás ver y la 
-                                posibilidad de mostrar tu trabajo y ayudar a la comunidad :)
+                    <div className="card border-0 shadow-lg bg-dark text-light" style={{borderTop: '3px solid #00ff88'}}>
+                        <div className="card-body p-5">
+                            <h3 className="fw-bold mb-3" style={{color: '#00ff88'}}>Crea tu Cuenta</h3>
+                            <p className="text-muted mb-4" style={{ fontSize: '0.95em' }}>
+                                Únete a la comunidad de desarrolladores Godot. Comparte tus códigos y aprende de otros.
                             </p>
                             
                             {/* Mensaje de error/éxito */}
@@ -169,13 +168,14 @@ function Registro() {
                             <form id="formRegistro" noValidate onSubmit={handleSubmit}>
                                 <div className="row">
                                     <div className="col-md-6 mb-3">
-                                        <label htmlFor="nombre" className="form-label fw-semibold">Nombre*</label>
+                                        <label htmlFor="nombre" className="form-label fw-semibold" style={{color: '#e2e8f0'}}>Nombre*</label>
                                         <input 
                                             type="text" 
                                             id="nombre" 
                                             className={`form-control ${errors.nombre ? 'is-invalid' : ''}`}
+                                            style={{backgroundColor: '#1e293b', color: '#e2e8f0', borderColor: '#00ff88'}}
                                             required 
-                                            placeholder="Ingrese tu nombre"
+                                            placeholder="Tu nombre"
                                             value={formData.nombre}
                                             onChange={handleChange}
                                         />
@@ -184,13 +184,14 @@ function Registro() {
                                         )}
                                     </div>
                                     <div className="col-md-6 mb-3">
-                                        <label htmlFor="apellidoPaterno" className="form-label fw-semibold">Apellido Paterno*</label>
+                                        <label htmlFor="apellidoPaterno" className="form-label fw-semibold" style={{color: '#e2e8f0'}}>Apellido Paterno*</label>
                                         <input 
                                             type="text" 
                                             id="apellidoPaterno" 
                                             className={`form-control ${errors.apellidoPaterno ? 'is-invalid' : ''}`}
+                                            style={{backgroundColor: '#1e293b', color: '#e2e8f0', borderColor: '#00ff88'}}
                                             required 
-                                            placeholder="Ingrese apellido paterno"
+                                            placeholder="Tu apellido paterno"
                                             value={formData.apellidoPaterno}
                                             onChange={handleChange}
                                         />
@@ -200,13 +201,14 @@ function Registro() {
                                     </div>
                                 </div>
                                 <div className="mb-3">
-                                    <label htmlFor="apellidoMaterno" className="form-label fw-semibold">Apellido Materno*</label>
+                                    <label htmlFor="apellidoMaterno" className="form-label fw-semibold" style={{color: '#e2e8f0'}}>Apellido Materno*</label>
                                     <input 
                                         type="text" 
                                         id="apellidoMaterno" 
                                         className={`form-control ${errors.apellidoMaterno ? 'is-invalid' : ''}`}
+                                        style={{backgroundColor: '#1e293b', color: '#e2e8f0', borderColor: '#00ff88'}}
                                         required 
-                                        placeholder="Ingrese apellido materno"
+                                        placeholder="Tu apellido materno"
                                         value={formData.apellidoMaterno}
                                         onChange={handleChange}
                                     />
@@ -215,13 +217,14 @@ function Registro() {
                                     )}
                                 </div>
                                 <div className="mb-3">
-                                    <label htmlFor="correo" className="form-label fw-semibold">Correo electrónico*</label>
+                                    <label htmlFor="correo" className="form-label fw-semibold" style={{color: '#e2e8f0'}}>Correo electrónico*</label>
                                     <input 
                                         type="email" 
                                         id="correo" 
                                         className={`form-control ${errors.correo ? 'is-invalid' : ''}`}
+                                        style={{backgroundColor: '#1e293b', color: '#e2e8f0', borderColor: '#00ff88'}}
                                         required 
-                                        placeholder="Ingrese tu correo electrónico"
+                                        placeholder="tu@correo.com"
                                         value={formData.correo}
                                         onChange={handleChange}
                                     />
@@ -230,13 +233,14 @@ function Registro() {
                                     )}
                                 </div>
                                 <div className="mb-3">
-                                    <label htmlFor="usuario" className="form-label fw-semibold">Nombre de usuario*</label>
+                                    <label htmlFor="usuario" className="form-label fw-semibold" style={{color: '#e2e8f0'}}>Nombre de usuario*</label>
                                     <input 
                                         type="text" 
                                         id="usuario" 
                                         className={`form-control ${errors.usuario ? 'is-invalid' : ''}`}
+                                        style={{backgroundColor: '#1e293b', color: '#e2e8f0', borderColor: '#00ff88'}}
                                         required 
-                                        placeholder="Ingrese su nombre de usuario"
+                                        placeholder="Tu usuario"
                                         value={formData.usuario}
                                         onChange={handleChange}
                                     />
@@ -245,22 +249,24 @@ function Registro() {
                                     )}
                                 </div>
                                 <div className="mb-3">
-                                    <label htmlFor="telefono" className="form-label fw-semibold">Teléfono</label>
+                                    <label htmlFor="telefono" className="form-label fw-semibold" style={{color: '#e2e8f0'}}>Teléfono</label>
                                     <input 
-                                        type="tel" 
+                                        type="tel"
                                         id="telefono" 
                                         className="form-control" 
-                                        placeholder="Ingrese tu número de teléfono"
+                                        style={{backgroundColor: '#1e293b', color: '#e2e8f0', borderColor: '#00ff88'}}
+                                        placeholder="Tu número de teléfono"
                                         value={formData.telefono}
                                         onChange={handleChange}
                                     />
                                 </div>
                                 <div className="mb-3">
-                                    <label htmlFor="password" className="form-label fw-semibold">Contraseña*</label>
+                                    <label htmlFor="password" className="form-label fw-semibold" style={{color: '#e2e8f0'}}>Contraseña*</label>
                                     <input 
                                         type="password" 
                                         id="password" 
                                         className={`form-control ${errors.password ? 'is-invalid' : ''}`}
+                                        style={{backgroundColor: '#1e293b', color: '#e2e8f0', borderColor: '#00ff88'}}
                                         required 
                                         placeholder="Crea una contraseña segura"
                                         value={formData.password}
@@ -269,14 +275,15 @@ function Registro() {
                                     {errors.password && (
                                         <div className="text-danger mt-1" style={{ fontSize: '0.875em' }}>{errors.password}</div>
                                     )}
-                                    <div className="form-text text-muted" style={{ fontSize: '0.8em' }}>La contraseña debe tener al menos 8 caracteres, una mayúscula y un carácter especial (!@#$%^&* etc.).</div>
+                                    <div className="form-text text-muted" style={{ fontSize: '0.8em' }}>Mín. 8 caracteres, una mayúscula y un carácter especial (!@#$%^&*)</div>
                                 </div>
                                 <div className="mb-3">
-                                    <label htmlFor="confirmar" className="form-label fw-semibold">Confirma contraseña*</label>
+                                    <label htmlFor="confirmar" className="form-label fw-semibold" style={{color: '#e2e8f0'}}>Confirma contraseña*</label>
                                     <input 
                                         type="password" 
                                         id="confirmar" 
                                         className={`form-control ${errors.confirmar ? 'is-invalid' : ''}`}
+                                        style={{backgroundColor: '#1e293b', color: '#e2e8f0', borderColor: '#00ff88'}}
                                         required 
                                         placeholder="Confirma tu contraseña"
                                         value={formData.confirmar}
@@ -294,20 +301,25 @@ function Registro() {
                                         required
                                         checked={formData.terminos}
                                         onChange={handleChange}
+                                        style={{cursor: 'pointer'}}
                                     />
-                                    <label className="form-check-label" htmlFor="terminos" style={{ fontSize: '0.9em' }}>
-                                        Acepta los <a href="#" style={{ color: '#1a5490' }}>términos y condiciones</a>
+                                    <label className="form-check-label ms-2" htmlFor="terminos" style={{ fontSize: '0.9em', color: '#e2e8f0', cursor: 'pointer' }}>
+                                        Acepta los <a href="#" style={{ color: '#00ff88', textDecoration: 'none' }}>términos y condiciones</a>
                                     </label>
                                     {errors.terminos && (
                                         <div className="text-danger mt-1" style={{ fontSize: '0.875em' }}>{errors.terminos}</div>
                                     )}
                                 </div>
-                                <button type="submit" className="btn fw-bold w-100 py-3 mb-3" style={{ background: '#1a5490', color: 'white' }}>Crear cuenta</button>
+                                <button type="submit" className="btn fw-bold w-100 py-2" style={{ background: '#00ff88', color: '#0f172a' }}>
+                                    <i className="fas fa-user-plus me-2"></i> Crear Cuenta
+                                </button>
                             </form>
                             
-                            <div className="text-center">
-                                <span style={{ fontSize: '0.9em' }}>Ya tienes una cuenta? </span>
-                                <Link to="/login" style={{ textDecoration: 'none', fontSize: '0.9em' }}>Inicia sesión</Link>
+                            <div className="text-center mt-4">
+                                <span style={{ fontSize: '0.9em', color: '#cbd5e1' }}>¿Ya tienes cuenta? </span>
+                                <Link to="/login" style={{ textDecoration: 'none', fontSize: '0.9em', color: '#00ff88', fontWeight: 'bold' }}>
+                                    Inicia sesión aquí
+                                </Link>
                             </div>
                         </div>
                     </div>

@@ -62,6 +62,24 @@ body {
     padding: 0.75rem 0;
     z-index: 1040;
 }
+
+.navbar-brand {
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navbar-brand:hover {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 12px rgba(0, 255, 136, 0.4));
+}
+
+.navbar-brand img {
+    object-fit: contain;
+    transition: all 0.3s ease;
+}
+
 .navbar .nav-link, .navbar-brand {
     color: #e2e8f0 !important;
     transition: color 0.3s ease;
@@ -1195,3 +1213,455 @@ footer .fa-discord:hover {
         padding-top: 70px;
     }
 }
+
+/* ===========================================
+   ESTILOS PARA PERFIL MEJORADO
+   =========================================== */
+
+.profile-container {
+    background: linear-gradient(135deg, #0f172a 0%, #16213e 100%) !important;
+    min-height: 100vh;
+    padding-bottom: 3rem;
+}
+
+.profile-header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    padding: 3rem;
+    border-radius: 16px;
+    border: 2px solid #00ff88;
+    box-shadow: 0 8px 32px rgba(0, 255, 136, 0.15);
+}
+
+.profile-avatar-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+}
+
+.profile-avatar {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    border: 4px solid #00ff88;
+    object-fit: contain;
+    background: rgba(26, 26, 46, 0.5);
+    box-shadow: 0 8px 32px rgba(0, 255, 136, 0.4);
+    transition: all 0.3s ease;
+    padding: 8px;
+}
+
+.profile-avatar:hover {
+    transform: scale(1.08);
+    box-shadow: 0 12px 40px rgba(0, 255, 136, 0.6);
+    border-color: #0088ff;
+}
+
+.profile-name {
+    color: #f1f5f9 !important;
+    font-size: 2rem;
+    background: linear-gradient(90deg, #00ff88, #0088ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.profile-username {
+    font-size: 1.1rem;
+    color: #cbd5e1 !important;
+}
+
+.profile-email {
+    font-size: 0.95rem;
+    color: #a1a5b0 !important;
+}
+
+.profile-status {
+    margin: 0;
+}
+
+.profile-tabs {
+    border-bottom: 2px solid #00ff88 !important;
+    gap: 1rem;
+}
+
+.profile-tabs .nav-link {
+    color: #cbd5e1 !important;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 1rem 1.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.profile-tabs .nav-link:hover {
+    color: #00ff88 !important;
+    border-bottom-color: #00ff88;
+}
+
+.profile-tabs .nav-link.active {
+    color: #00ff88 !important;
+    border-bottom-color: #00ff88;
+    background: rgba(0, 255, 136, 0.1);
+}
+
+.profile-info-section,
+.profile-content-section {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.info-card {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid #00ff88;
+}
+
+.info-card-title {
+    color: #f1f5f9;
+    font-weight: 700;
+    background: linear-gradient(90deg, #00ff88, #0088ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1.5rem !important;
+}
+
+.info-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+}
+
+.info-value {
+    font-size: 1.1rem;
+    color: #f1f5f9;
+    margin: 0;
+    padding: 0.75rem;
+    background: rgba(0, 255, 136, 0.05);
+    border-left: 3px solid #00ff88;
+    border-radius: 4px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    padding: 2rem;
+    border-radius: 12px;
+    border: 2px solid #0088ff;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    border-color: #00ff88;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 255, 136, 0.2);
+}
+
+.stat-number {
+    color: #00ff88;
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: #cbd5e1;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.favorite-card {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border: 2px solid #00ff88;
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.favorite-card:hover {
+    border-color: #0088ff;
+    transform: translateY(-6px);
+    box-shadow: 0 12px 32px rgba(0, 255, 136, 0.2);
+}
+
+.favorite-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.favorite-icon {
+    font-size: 1.5rem;
+}
+
+.favorite-card-title {
+    color: #f1f5f9;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+}
+
+.favorite-card-desc {
+    color: #cbd5e1;
+    font-size: 0.9rem;
+    flex-grow: 1;
+    margin-bottom: 1rem;
+}
+
+.favorite-card-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: #64748b;
+    border-top: 1px solid #334155;
+    padding-top: 1rem;
+}
+
+.empty-state {
+    background: rgba(0, 255, 136, 0.05);
+    border: 2px dashed #00ff88;
+    border-radius: 12px;
+    padding: 3rem 2rem;
+}
+
+.empty-state i {
+    color: #cbd5e1;
+}
+
+.empty-state p {
+    color: #cbd5e1;
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .profile-header {
+        padding: 1.5rem;
+    }
+
+    .profile-avatar {
+        width: 120px;
+        height: 120px;
+    }
+
+    .profile-name {
+        font-size: 1.5rem;
+    }
+
+    .profile-tabs {
+        gap: 0.5rem;
+    }
+
+    .profile-tabs .nav-link {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 0.75rem;
+    }
+
+    .stat-card {
+        padding: 1rem;
+    }
+
+    .stat-number {
+        font-size: 1.5rem;
+    }
+}
+
+/* ============================================
+   ESTILOS DE BOTONES MEJORADOS
+   ============================================ */
+
+/* Botones primarios */
+.btn {
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+/* Botón light (blanco) */
+.btn-light {
+    background: #f1f5f9 !important;
+    color: #0f172a !important;
+    border: 2px solid #f1f5f9 !important;
+}
+
+.btn-light:hover {
+    background: #e2e8f0 !important;
+    border-color: #00ff88 !important;
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+}
+
+/* Botón danger (rojo) */
+.btn-danger {
+    background: #ef4444 !important;
+    color: white !important;
+    border: none !important;
+}
+
+.btn-danger:hover {
+    background: #dc2626 !important;
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+}
+
+/* Botón outline danger */
+.btn-outline-danger {
+    color: #ef4444 !important;
+    border: 2px solid #ef4444 !important;
+    background: transparent !important;
+}
+
+.btn-outline-danger:hover {
+    background: #ef4444 !important;
+    color: white !important;
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+}
+
+/* Botón warning (amarillo) */
+.btn-warning {
+    background: #f59e0b !important;
+    color: #0f172a !important;
+    border: none !important;
+}
+
+.btn-warning:hover {
+    background: #d97706 !important;
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+}
+
+/* Botón outline warning */
+.btn-outline-warning {
+    color: #f59e0b !important;
+    border: 2px solid #f59e0b !important;
+    background: transparent !important;
+}
+
+.btn-outline-warning:hover {
+    background: #f59e0b !important;
+    color: #0f172a !important;
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+}
+
+/* Botón success (verde neon) */
+.btn-success {
+    background: #00ff88 !important;
+    color: #0f172a !important;
+    border: none !important;
+}
+
+.btn-success:hover {
+    background: #00dd6f !important;
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+    text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+}
+
+/* Botón outline success */
+.btn-outline-success {
+    color: #00ff88 !important;
+    border: 2px solid #00ff88 !important;
+    background: transparent !important;
+}
+
+.btn-outline-success:hover {
+    background: #00ff88 !important;
+    color: #0f172a !important;
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+}
+
+/* Botón info (azul neon) */
+.btn-info {
+    background: #0088ff !important;
+    color: white !important;
+    border: none !important;
+}
+
+.btn-info:hover {
+    background: #0066dd !important;
+    box-shadow: 0 0 20px rgba(0, 136, 255, 0.4);
+}
+
+/* Botón outline info */
+.btn-outline-info {
+    color: #0088ff !important;
+    border: 2px solid #0088ff !important;
+    background: transparent !important;
+}
+
+.btn-outline-info:hover {
+    background: #0088ff !important;
+    color: white !important;
+    box-shadow: 0 0 20px rgba(0, 136, 255, 0.4);
+}
+
+/* Botón sm (pequeño) */
+.btn-sm {
+    padding: 0.4rem 0.8rem !important;
+    font-size: 0.85rem !important;
+}
+
+/* Botón lg (grande) */
+.btn-lg {
+    padding: 0.75rem 2rem !important;
+    font-size: 1.1rem !important;
+}
+
+/* Deshabilitado */
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.btn:disabled:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Botón ancho */
+.btn-block, .w-100 {
+    display: block;
+    width: 100%;
+}
+

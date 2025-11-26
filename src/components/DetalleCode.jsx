@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import { toggleLike, toggleSave, getUserData } from '../services/userDataService'
 import codigoService from '../services/codigoService'
 import { codigosData } from '../data/codigosData'
-import Logo from '../assets/Logo.svg'
+import Logo from '../assets/Logo.png'
 import LoginPromptModal from './LoginPromptModal'
 
 function DetalleCode() {
@@ -160,13 +160,13 @@ function DetalleCode() {
                                 className={`btn btn-sm ${liked ? 'btn-danger' : 'btn-outline-danger'}`}
                                 onClick={handleLike}
                             >
-                                <i className="far fa-heart"></i> {codigoActual.likes + (liked ? 1 : 0)}
+                                <i className={`${liked ? 'fas' : 'far'} fa-heart`}></i> {codigoActual.likes + (liked ? 1 : 0)}
                             </button>
                             <button 
                                 className={`btn btn-sm ${saved ? 'btn-warning' : 'btn-outline-warning'}`}
                                 onClick={handleSave}
                             >
-                                <i className="far fa-bookmark"></i>
+                                <i className={`${saved ? 'fas' : 'far'} fa-bookmark`}></i>
                             </button>
                         </div>
                     </div>

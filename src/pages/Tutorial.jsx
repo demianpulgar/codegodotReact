@@ -1,6 +1,7 @@
 import SectionHeader from '../components/ui/SectionHeader'
 import TOC from '../components/ui/TOC'
 import Callout from '../components/ui/Callout'
+import { Link } from 'react-router-dom'
 
 export default function Tutorial() {
   return (
@@ -18,7 +19,7 @@ export default function Tutorial() {
       <div id="inicio-rapido">
         <h3>Inicio rápido (5 minutos)</h3>
         <ol>
-          <li>Elige un código que te interese en <a href="/comunidad">Comunidad</a></li>
+          <li>Elige un código que te interese en <Link to="/comunidad">Comunidad</Link></li>
           <li>Haz clic en el código para copiar</li>
           <li>En Godot, crea el nodo sugerido (ej: <code>CharacterBody2D</code>)</li>
           <li>Crea un nuevo script y pega el código</li>

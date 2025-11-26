@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import Logo from '../assets/Logo.svg'
+import Logo from '../assets/Logo.png'
 
 function Navbar() {
     const [usuarioLogueado, setUsuarioLogueado] = useState(null)
@@ -46,9 +46,9 @@ function Navbar() {
 
     return (
         <nav className="navbar navbar-expand-lg fixed-top">
-            <div className="container-fluid">
-                <Link className="navbar-brand" to="/" onClick={cerrarNavbar}>
-                    <img src={Logo} alt="CodeGodot Logo" className="d-none d-md-block" style={{height: '60px', width: 'auto'}} />
+            <div className="container">
+                <Link className="navbar-brand me-4" to="/" onClick={cerrarNavbar}>
+                    <img src={Logo} alt="CodeGodot Logo" className="d-none d-md-block" style={{height: '50px', width: 'auto'}} />
                     <img src={Logo} alt="CodeGodot Logo" className="d-md-none" style={{height: '40px', width: 'auto'}} />
                 </Link>
                 <button 
@@ -63,8 +63,8 @@ function Navbar() {
                 >
                     <span className="navbar-toggler-icon"></span>
                 </button>
-                <div className="collapse navbar-collapse" id="navbarNav">
-                    <ul className="navbar-nav ms-auto">
+                <div className="collapse navbar-collapse justify-content-center" id="navbarNav">
+                    <ul className="navbar-nav">
                         <li className="nav-item">
                             <Link className="nav-link" to="/" onClick={cerrarNavbar}>INICIO</Link>
                         </li>
@@ -81,22 +81,25 @@ function Navbar() {
                             <>
                                 <li className="nav-item">
                                     <Link className="nav-link" to="/perfil" onClick={cerrarNavbar}>
-                                        <i className="fas fa-user me-1"></i> MI PERFIL
+                                        <i className="fas fa-user me-2" style={{color: '#00ff88'}}></i> {usuarioLogueado.username || 'Usuario'}
                                     </Link>
                                 </li>
                                 <li className="nav-item">
                                     <button 
-                                        className="btn btn-light fw-bold px-3" 
+                                        className="btn btn-outline-danger fw-bold px-3 py-1" 
                                         onClick={handleLogout}
+                                        style={{fontSize: '0.9rem', borderWidth: '2px'}}
                                     >
-                                        CERRAR SESIÓN
+                                        <i className="fas fa-sign-out-alt me-2"></i>SALIR
                                     </button>
                                 </li>
                             </>
                         ) : (
                             <>
                                 <li className="nav-item">
-                                    <Link className="nav-link" to="/login" onClick={cerrarNavbar}>INICIO SESIÓN</Link>
+                                    <Link className="nav-link" to="/login" onClick={cerrarNavbar}>
+                                        <i className="fas fa-sign-in-alt me-1"></i> INICIO SESIÓN
+                                    </Link>
                                 </li>
                                 <li className="nav-item">
                                     <Link className="btn btn-light fw-bold px-3" to="/registro" onClick={cerrarNavbar}>REGISTRAR</Link>

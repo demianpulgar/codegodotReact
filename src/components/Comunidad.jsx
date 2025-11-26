@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import codigoService from '../services/codigoService'
 import { useAuth } from '../context/AuthContext'
-import { toggleLike, toggleSave } from '../services/userDataService'
+import { toggleLike, toggleSave, getUserData } from '../services/userDataService'
 import CategoryFilter from './CategoryFilter'
 import CodePreview from './CodePreview'
 import LoginPromptModal from './LoginPromptModal'
@@ -18,6 +18,8 @@ function Comunidad() {
     const [loginAction, setLoginAction] = useState('Dar me gusta')
     const [cargando, setCargando] = useState(true)
     const [error, setError] = useState(null)
+    const [userLikesState, setUserLikesState] = useState(new Set())
+    const [userSavesState, setUserSavesState] = useState(new Set())
     const codigosPorPagina = 9
 
     // Cargar datos desde la API
@@ -39,6 +41,15 @@ function Comunidad() {
         }
         cargarCodigos()
     }, [])
+
+    // Actualizar estado de likes y guardados cuando cambia el usuario
+    useEffect(() => {
+        if (user) {
+            const userData = getUserData(user.username)
+            setUserLikesState(new Set(userData.likes))
+            setUserSavesState(new Set(userData.saves))
+        }
+    }, [user])
 
     // Filtrado combinado: búsqueda + categoría
     useEffect(() => {
@@ -90,22 +101,52 @@ function Comunidad() {
 
     // Manejadores con modal de login
     const handleLike = (codigo) => {
-        if (!user) {
+        // Verificar si hay usuario en localStorage
+        const usuarioLocal = localStorage.getItem('usuarioLogeado')
+        const usuarioActivo = user || (usuarioLocal ? JSON.parse(usuarioLocal) : null)
+        
+        if (!usuarioActivo) {
             setLoginAction('dar me gusta a este código')
             setShowLoginPrompt(true)
             return
         }
-        toggleLike(user.username, codigo.id)
+        toggleLike(usuarioActivo.username, codigo.id)
+        // Actualizar estado local
+        const newLikes = new Set(userLikesState)
+        if (newLikes.has(codigo.id)) {
+            newLikes.delete(codigo.id)
+        } else {
+            newLikes.add(codigo.id)
+        }
+        setUserLikesState(newLikes)
     }
 
     const handleSave = (codigo) => {
-        if (!user) {
+        // Verificar si hay usuario en localStorage
+        const usuarioLocal = localStorage.getItem('usuarioLogeado')
+        const usuarioActivo = user || (usuarioLocal ? JSON.parse(usuarioLocal) : null)
+        
+        if (!usuarioActivo) {
             setLoginAction('guardar este código')
             setShowLoginPrompt(true)
             return
         }
-        toggleSave(user.username, codigo.id)
+        toggleSave(usuarioActivo.username, codigo.id)
+        // Actualizar estado local
+        const newSaves = new Set(userSavesState)
+        if (newSaves.has(codigo.id)) {
+            newSaves.delete(codigo.id)
+        } else {
+            newSaves.add(codigo.id)
+        }
+        setUserSavesState(newSaves)
     }
+
+    // Verificar si un código tiene like del usuario actual
+    const isLiked = (codigoId) => userLikesState.has(codigoId)
+    
+    // Verificar si un código está guardado del usuario actual
+    const isSaved = (codigoId) => userSavesState.has(codigoId)
 
     return (
         <>
@@ -216,17 +257,17 @@ function Comunidad() {
                                                     <div className="d-flex gap-2 flex-wrap">
                                                         <button
                                                             type="button"
-                                                            className="btn btn-sm btn-outline-danger flex-grow-1"
+                                                            className={`btn btn-sm flex-grow-1 ${isLiked(codigo.id) ? 'btn-danger' : 'btn-outline-danger'}`}
                                                             onClick={() => handleLike(codigo)}
                                                         >
-                                                            <i className="far fa-heart"></i> {codigo.likes || 0}
+                                                            <i className={`${isLiked(codigo.id) ? 'fas' : 'far'} fa-heart`}></i> {codigo.likes || 0}
                                                         </button>
                                                         <button
                                                             type="button"
-                                                            className="btn btn-sm btn-outline-warning flex-grow-1"
+                                                            className={`btn btn-sm flex-grow-1 ${isSaved(codigo.id) ? 'btn-warning' : 'btn-outline-warning'}`}
                                                             onClick={() => handleSave(codigo)}
                                                         >
-                                                            <i className="far fa-bookmark"></i> {codigo.guardados || 0}
+                                                            <i className={`${isSaved(codigo.id) ? 'fas' : 'far'} fa-bookmark`}></i> {codigo.guardados || 0}
                                                         </button>
                                                     </div>
                                                 </div>

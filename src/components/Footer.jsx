@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import Logo from '../assets/Logo.svg'
+import Logo from '../assets/Logo.png'
 import Instagram from '../assets/instagram.png'
 import X from '../assets/x.png'
 import Reddit from '../assets/reddit.png'
