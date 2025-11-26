@@ -1,6 +1,7 @@
 export default function Tutorial() {
   return (
-    <div className="container py-5">
+    <section className="page-section">
+      <div className="container">
       <h1 className="fw-bold mb-4">Cómo usar los códigos</h1>
       <ol className="mb-4">
         <li>Elige una publicación y copia el bloque de código.</li>
@@ -15,6 +16,7 @@ export default function Tutorial() {
         <li>Divide tu lógica en funciones pequeñas.</li>
         <li>Usa señales para comunicar nodos (por ejemplo, puertas que escuchan al jugador).</li>
       </ul>
-    </div>
+      </div>
+    </section>
   )
 }
