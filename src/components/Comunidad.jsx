@@ -135,7 +135,7 @@ function Comunidad() {
     }
 
     // Manejadores con modal de login
-    const handleLike = (codigo) => {
+    const handleLike = async (codigo) => {
         // Verificar si hay usuario en localStorage
         const usuarioLocal = localStorage.getItem('usuarioLogeado')
         const usuarioActivo = user || (usuarioLocal ? JSON.parse(usuarioLocal) : null)
@@ -145,18 +145,25 @@ function Comunidad() {
             setShowLoginPrompt(true)
             return
         }
-        toggleLike(usuarioActivo.username, codigo.id)
-        // Actualizar estado local
-        const newLikes = new Set(userLikesState)
-        if (newLikes.has(codigo.id)) {
-            newLikes.delete(codigo.id)
-        } else {
-            newLikes.add(codigo.id)
+        const yaLeGusta = userLikesState.has(codigo.id)
+        const increment = !yaLeGusta
+        const likesUsuario = toggleLike(usuarioActivo.username, codigo.id)
+        setUserLikesState(new Set(likesUsuario))
+        actualizarContadorLocal(codigo.id, 'likes', increment)
+
+        try {
+            await codigoService.actualizarLikes(codigo.id, increment)
+        } catch (err) {
+            console.error('Error actualizando likes en servidor:', err)
+            // revertir cambios locales
+            const revertLikes = toggleLike(usuarioActivo.username, codigo.id)
+            setUserLikesState(new Set(revertLikes))
+            actualizarContadorLocal(codigo.id, 'likes', !increment)
+            setError('No pudimos actualizar tu like. Intenta nuevamente.')
         }
-        setUserLikesState(newLikes)
     }
 
-    const handleSave = (codigo) => {
+    const handleSave = async (codigo) => {
         // Verificar si hay usuario en localStorage
         const usuarioLocal = localStorage.getItem('usuarioLogeado')
         const usuarioActivo = user || (usuarioLocal ? JSON.parse(usuarioLocal) : null)
@@ -166,15 +173,40 @@ function Comunidad() {
             setShowLoginPrompt(true)
             return
         }
-        toggleSave(usuarioActivo.username, codigo.id)
-        // Actualizar estado local
-        const newSaves = new Set(userSavesState)
-        if (newSaves.has(codigo.id)) {
-            newSaves.delete(codigo.id)
-        } else {
-            newSaves.add(codigo.id)
+        const yaGuardado = userSavesState.has(codigo.id)
+        const increment = !yaGuardado
+        const savesUsuario = toggleSave(usuarioActivo.username, codigo.id)
+        setUserSavesState(new Set(savesUsuario))
+        actualizarContadorLocal(codigo.id, 'guardados', increment)
+
+        try {
+            await codigoService.actualizarGuardados(codigo.id, increment)
+        } catch (err) {
+            console.error('Error actualizando guardados en servidor:', err)
+            const revertSaves = toggleSave(usuarioActivo.username, codigo.id)
+            setUserSavesState(new Set(revertSaves))
+            actualizarContadorLocal(codigo.id, 'guardados', !increment)
+            setError('No pudimos actualizar tus guardados. Intenta nuevamente.')
         }
-        setUserSavesState(newSaves)
+    }
+
+    const actualizarContadorLocal = (codigoId, campo, increment) => {
+        setCodigos(prev => prev.map(item => {
+            if (item.id !== codigoId) return item
+            const valorActual = item[campo] ?? 0
+            return {
+                ...item,
+                [campo]: Math.max(0, valorActual + (increment ? 1 : -1))
+            }
+        }))
+        setCodigosOriginales(prev => prev.map(item => {
+            if (item.id !== codigoId) return item
+            const valorActual = item[campo] ?? 0
+            return {
+                ...item,
+                [campo]: Math.max(0, valorActual + (increment ? 1 : -1))
+            }
+        }))
     }
 
     // Verificar si un código tiene like del usuario actual
@@ -281,10 +313,10 @@ function Comunidad() {
                                     codigo && codigo.id ? (
                                         <div className="col-12 col-sm-6 col-lg-4 mb-4" key={codigo.id}>
                                             <div className="card h-100 shadow-sm card-hover" style={{cursor: 'pointer', transition: 'all 0.3s ease'}}>
-                                                <div className="card-code-preview" onClick={() => window.location.href = `/comunidad/${codigo.id}`}>
+                                                <div className="card-code-preview" onClick={() => window.location.href = '#/comunidad/' + codigo.id}>
                                                     <CodePreview codigo={codigo.codigo ? codigo.codigo.substring(0, 200) : ''} />
                                                 </div>
-                                                <div className="card-body d-flex flex-column" onClick={() => window.location.href = `/comunidad/${codigo.id}`} style={{cursor: 'pointer'}}>
+                                                <div className="card-body d-flex flex-column" onClick={() => window.location.href = '#/comunidad/' + codigo.id} style={{cursor: 'pointer'}}>
                                                     <div className="d-flex justify-content-between align-items-start mb-2 gap-2">
                                                         <small className="badge bg-info text-dark flex-shrink-0">{codigo.categoria || 'Sin categoría'}</small>
                                                         <small className="text-muted text-end flex-shrink-0">{codigo.fecha || 'Sin fecha'}</small>

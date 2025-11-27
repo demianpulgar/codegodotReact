@@ -37,7 +37,8 @@ function Navbar() {
         cerrarNavbar()
         localStorage.removeItem('usuarioLogeado')
         setUsuarioLogueado(null)
-        window.location.href = '/'
+        // Navegación compatible con HashRouter en S3
+        window.location.hash = '/'
     }
 
     return (

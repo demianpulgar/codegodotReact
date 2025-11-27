@@ -47,6 +47,17 @@
   transform: rotate(180deg);
 }
 
+@media (max-width: 768px) {
+  .filter-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+  }
+  
+  .filter-btn i {
+    font-size: 0.65rem;
+  }
+}
+
 .filter-menu {
   position: absolute;
   top: calc(100% + 0.5rem);

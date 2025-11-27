@@ -1192,6 +1192,15 @@ footer .fa-discord:hover {
         font-size: 0.875rem !important;
     }
     
+    /* Grid responsivo para Comunidad */
+    .row > .col-12,
+    .row > .col-md-6,
+    .row > .col-lg-4 {
+        width: 100%;
+        max-width: 100%;
+        padding: 0.5rem !important;
+    }
+    
     /* Botones de acción en DetalleCode */
     .code-header .btn-sm {
         padding: 0.375rem 0.75rem;

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import config from '../config/api'
 import Toast from './Toast'
+import * as usuarioService from '../services/usuarioService'
 
 function Registro() {
     const navigate = useNavigate()
@@ -108,27 +108,16 @@ function Registro() {
 
         setCargando(true)
         try {
-            // Enviar registro al backend
-            const response = await fetch(`${config.baseURL}/usuarios`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    nombre: formData.nombre,
-                    apellidoPaterno: formData.apellidoPaterno,
-                    apellidoMaterno: formData.apellidoMaterno,
-                    correo: formData.correo,
-                    username: formData.usuario,
-                    telefono: formData.telefono,
-                    password: formData.password
-                })
+            // Usar el nuevo servicio de usuario
+            await usuarioService.registro({
+                nombre: formData.nombre,
+                apellidoPaterno: formData.apellidoPaterno,
+                apellidoMaterno: formData.apellidoMaterno,
+                correo: formData.correo,
+                username: formData.usuario,
+                telefono: formData.telefono,
+                password: formData.password
             })
-
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}))
-                throw new Error(errorData.message || 'Error al registrar el usuario')
-            }
 
             setToast({ 
                 texto: '¡Bienvenido! Tu cuenta ha sido creada. Redirigiendo a login...', 

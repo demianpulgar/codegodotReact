@@ -116,6 +116,33 @@ class CodigoService {
       throw error;
     }
   }
+
+  async actualizarLikes(id, increment = true) {
+    return this.actualizarReaccion(id, 'likes', increment);
+  }
+
+  async actualizarGuardados(id, increment = true) {
+    return this.actualizarReaccion(id, 'guardados', increment);
+  }
+
+  async actualizarReaccion(id, tipo, increment) {
+    try {
+      const response = await fetch(`${this.baseURL}/codigos/${id}/${tipo}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ increment }),
+      });
+      if (!response.ok) {
+        throw new Error(`Error al actualizar ${tipo}: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error(`Error al actualizar ${tipo}:`, error);
+      throw error;
+    }
+  }
 }
 
 // Exportar una instancia única del servicio

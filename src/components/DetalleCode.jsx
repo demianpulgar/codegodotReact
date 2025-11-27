@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { toggleLike, toggleSave, getUserData } from '../services/userDataService'
 import codigoService from '../services/codigoService'
+import config from '../config/api'
 import { codigosData } from '../data/codigosData'
 import Logo from '../assets/Logo.png'
 import LoginPromptModal from './LoginPromptModal'
@@ -24,14 +25,17 @@ function DetalleCode() {
     const cargarCodigo = async () => {
         try {
             setCargando(true)
+            console.log(`Cargando código con ID: ${id} desde ${config.baseURL}/codigos/${id}`)
             const datos = await codigoService.obtenerPorId(parseInt(id))
+            console.log('Código cargado exitosamente:', datos)
             setCodigoActual(datos)
             setError(null)
         } catch (err) {
-            console.warn('Error al cargar código desde API, usando datos locales:', err)
+            console.error('Error al cargar código desde API:', err)
+            console.warn('Intentando usar datos locales...')
             const codigoLocal = codigosData.find(codigo => codigo.id === parseInt(id)) || codigosData[0]
             setCodigoActual(codigoLocal)
-            setError('Usando datos de ejemplo (API no disponible)')
+            setError(`⚠️ Error al cargar desde servidor (${err.message}). Usando datos de respaldo.`)
         } finally {
             setCargando(false)
         }
@@ -77,24 +81,63 @@ function DetalleCode() {
         }
     }
 
-    const handleLike = () => {
+    const handleLike = async () => {
         if (!user) {
             setLoginAction('dar me gusta a este código')
             setShowLoginPrompt(true)
             return
         }
-        const likes = toggleLike(user.username, parseInt(id))
-        setLiked(likes.includes(parseInt(id)))
+        const codigoId = parseInt(id)
+        const increment = !liked
+        const likes = toggleLike(user.username, codigoId)
+        setLiked(likes.includes(codigoId))
+        actualizarCodigoActual('likes', increment)
+
+        try {
+            const actualizado = await codigoService.actualizarLikes(codigoId, increment)
+            setCodigoActual(actualizado)
+        } catch (error) {
+            console.error('Error al actualizar likes:', error)
+            const revertLikes = toggleLike(user.username, codigoId)
+            setLiked(revertLikes.includes(codigoId))
+            actualizarCodigoActual('likes', !increment)
+            setError('No pudimos registrar tu like. Intenta nuevamente.')
+        }
     }
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (!user) {
             setLoginAction('guardar este código')
             setShowLoginPrompt(true)
             return
         }
-        const saves = toggleSave(user.username, parseInt(id))
-        setSaved(saves.includes(parseInt(id)))
+        const codigoId = parseInt(id)
+        const increment = !saved
+        const saves = toggleSave(user.username, codigoId)
+        setSaved(saves.includes(codigoId))
+        actualizarCodigoActual('guardados', increment)
+
+        try {
+            const actualizado = await codigoService.actualizarGuardados(codigoId, increment)
+            setCodigoActual(actualizado)
+        } catch (error) {
+            console.error('Error al actualizar guardados:', error)
+            const revertSaves = toggleSave(user.username, codigoId)
+            setSaved(revertSaves.includes(codigoId))
+            actualizarCodigoActual('guardados', !increment)
+            setError('No pudimos actualizar tus guardados. Intenta nuevamente.')
+        }
+    }
+
+    const actualizarCodigoActual = (campo, increment) => {
+        setCodigoActual(prev => {
+            if (!prev) return prev
+            const valorActual = prev[campo] ?? 0
+            return {
+                ...prev,
+                [campo]: Math.max(0, valorActual + (increment ? 1 : -1))
+            }
+        })
     }
 
     const handleSubmitComentario = (e) => {

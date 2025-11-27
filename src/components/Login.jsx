@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import config from '../config/api'
 import Toast from './Toast'
+import * as usuarioService from '../services/usuarioService'
 
 function Login() {
     const navigate = useNavigate()
@@ -63,39 +63,15 @@ function Login() {
 
         setCargando(true)
         try {
-            // Intentar login con el backend
-            const response = await fetch(`${config.baseURL}/usuarios/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    usuario: formData.usuario,
-                    correo: formData.correo,
-                    password: formData.password
-                })
-            })
-
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}))
-                throw new Error(errorData.message || 'Credenciales inválidas')
-            }
-
-            const userData = await response.json()
-            
-            // Guardar usuario en localStorage
-            const usuarioParaGuardar = {
-                ...userData,
-                username: userData.username || formData.usuario
-            }
-            localStorage.setItem('usuarioLogeado', JSON.stringify(usuarioParaGuardar))
+            // Usar el nuevo servicio de usuario que sincroniza con BD
+            const userData = await usuarioService.login(formData.usuario, formData.correo, formData.password)
             
             setToast({ 
                 texto: '¡Bienvenido ' + userData.nombre + '!', 
                 tipo: 'success' 
             })
             
-            // Disparar evento
+            // Disparar evento de cambio
             window.dispatchEvent(new Event('storage'))
             
             setTimeout(() => {

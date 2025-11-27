@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { getUserData } from '../services/userDataService'
 import codigoService from '../services/codigoService'
-import config from '../config/api'
+import * as usuarioService from '../services/usuarioService'
 import Logo from '../assets/Logo.png'
 
 function Perfil() {
@@ -181,10 +181,9 @@ function Perfil() {
             let nuevoUsername = perfilEdicion.username
             if (nuevoUsername && nuevoUsername !== usuarioLocal.username) {
                 // Verificar disponibilidad del nuevo username
-                const checkResponse = await fetch(`${config.baseURL}/usuarios/check-username/${nuevoUsername}`)
-                if (checkResponse.ok) {
-                    const data = await checkResponse.json()
-                    if (data.exists) {
+                try {
+                    const disponible = await usuarioService.verificarUsernameDisponible(nuevoUsername)
+                    if (!disponible) {
                         setMensaje({
                             texto: 'El nombre de usuario ya está en uso',
                             tipo: 'danger'
@@ -192,6 +191,8 @@ function Perfil() {
                         setCargandoGuardar(false)
                         return
                     }
+                } catch (error) {
+                    console.error('Error verificando username:', error)
                 }
                 cambios.username = nuevoUsername
             }
@@ -206,31 +207,11 @@ function Perfil() {
                 return
             }
 
-            // Usar FormData en lugar de JSON para manejar datos grandes (especialmente fotos)
-            const formData = new FormData()
-            Object.keys(cambios).forEach(key => {
-                formData.append(key, cambios[key])
-            })
-
-            const response = await fetch(`${config.baseURL}/usuarios/${usuarioLocal.username}`, {
-                method: 'PUT',
-                body: formData
-            })
-
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}))
-                throw new Error(errorData.message || 'Error al actualizar el perfil')
-            }
-
-            const usuarioActualizado = await response.json()
-
-            // Actualizar localStorage
-            const usuarioActualizadoCompleto = {
-                ...usuarioLocal,
-                ...usuarioActualizado
-            }
-            localStorage.setItem('usuarioLogeado', JSON.stringify(usuarioActualizadoCompleto))
-            setUsuarioLocal(usuarioActualizadoCompleto)
+            // Usar el servicio de usuario que sincroniza con BD
+            const usuarioActualizado = await usuarioService.actualizarPerfil(usuarioLocal.username, cambios)
+            
+            // El servicio ya actualiza localStorage, pero también actualiza el estado local
+            setUsuarioLocal(usuarioActualizado)
 
             // Reinicializar formulario con datos actualizados
             setPerfilEdicion({
@@ -242,6 +223,11 @@ function Perfil() {
                 username: usuarioActualizado.username || '',
                 fotoUrl: usuarioActualizado.fotoUrl || ''
             })
+            
+            // Actualizar foto preview
+            if (usuarioActualizado.fotoUrl) {
+                setFotoPreview(usuarioActualizado.fotoUrl)
+            }
 
             setMensaje({
                 texto: '✅ Perfil actualizado correctamente',
