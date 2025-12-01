@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, jest } from '@jest/globals'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom'
+import * as usuarioService from '../services/usuarioService'
 import Login from './Login'
 
 // Mock de useNavigate
@@ -8,6 +9,10 @@ const mockNavigate = jest.fn()
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useNavigate: () => mockNavigate,
+}))
+
+jest.mock('../services/usuarioService', () => ({
+  login: jest.fn(),
 }))
 
 // Wrapper para proveer el contexto del router
@@ -19,6 +24,7 @@ describe('Login Component', () => {
   beforeEach(() => {
     localStorage.clear()
     mockNavigate.mockClear()
+    usuarioService.login.mockReset()
   })
 
   describe('Renderizado inicial', () => {
@@ -98,108 +104,82 @@ describe('Login Component', () => {
   })
 
   describe('Funcionalidad de login', () => {
-    it('debe mostrar error cuando las credenciales son incorrectas', async () => {
+    it('debe mostrar error cuando el backend rechaza las credenciales', async () => {
+      usuarioService.login.mockRejectedValue(new Error('Credenciales inválidas'))
+
       renderWithRouter(<Login />)
-      
-      // Llenar el formulario con datos incorrectos
+
       fireEvent.change(screen.getByLabelText(/Usuario/i), { target: { value: 'usuarioIncorrecto' } })
       fireEvent.change(screen.getByLabelText(/Correo electrónico/i), { target: { value: 'test@test.com' } })
       fireEvent.change(screen.getByLabelText(/Contraseña/i), { target: { value: 'password123' } })
-      
+
       const submitButton = screen.getByRole('button', { name: /Inicio Sesión/i })
       fireEvent.click(submitButton)
 
       await waitFor(() => {
-        expect(screen.getByText('Correo, usuario o contraseña incorrectos.')).toBeInTheDocument()
+        expect(usuarioService.login).toHaveBeenCalledWith('usuarioIncorrecto', 'test@test.com', 'password123')
+        expect(screen.getByText('Credenciales inválidas')).toBeInTheDocument()
       })
     })
 
-    it('debe iniciar sesión exitosamente con correo válido', async () => {
-      // Crear un usuario en localStorage
-      const usuario = {
-        nombre: 'Test',
-        apellidoPaterno: 'User',
-        apellidoMaterno: 'Prueba',
-        correo: 'test@test.com',
-        usuario: 'testuser',
-        password: 'Password123!'
-      }
-      localStorage.setItem('usuarios', JSON.stringify([usuario]))
-
-      renderWithRouter(<Login />)
-      
-      // Llenar el formulario
-      fireEvent.change(screen.getByLabelText(/Usuario/i), { target: { value: 'testuser' } })
-      fireEvent.change(screen.getByLabelText(/Correo electrónico/i), { target: { value: 'test@test.com' } })
-      fireEvent.change(screen.getByLabelText(/Contraseña/i), { target: { value: 'Password123!' } })
-      
-      const submitButton = screen.getByRole('button', { name: /Inicio Sesión/i })
-      fireEvent.click(submitButton)
-
-      await waitFor(() => {
-        expect(screen.getByText('¡Inicio de sesión exitoso!')).toBeInTheDocument()
-      })
-
-      // Verificar que se guardó en localStorage
-      const usuarioLogeado = JSON.parse(localStorage.getItem('usuarioLogeado'))
-      expect(usuarioLogeado).toEqual(usuario)
-    })
-
-    it('debe iniciar sesión con nombre de usuario válido', async () => {
-      // Crear un usuario en localStorage
-      const usuario = {
-        nombre: 'Test',
-        apellidoPaterno: 'User',
-        apellidoMaterno: 'Prueba',
-        correo: 'test@test.com',
-        usuario: 'testuser',
-        password: 'Password123!'
-      }
-      localStorage.setItem('usuarios', JSON.stringify([usuario]))
-
-      renderWithRouter(<Login />)
-      
-      // Llenar el formulario solo con usuario y password
-      fireEvent.change(screen.getByLabelText(/Usuario/i), { target: { value: 'testuser' } })
-      fireEvent.change(screen.getByLabelText(/Correo electrónico/i), { target: { value: 'cualquier@email.com' } })
-      fireEvent.change(screen.getByLabelText(/Contraseña/i), { target: { value: 'Password123!' } })
-      
-      const submitButton = screen.getByRole('button', { name: /Inicio Sesión/i })
-      fireEvent.click(submitButton)
-
-      await waitFor(() => {
-        expect(screen.getByText('¡Inicio de sesión exitoso!')).toBeInTheDocument()
-      })
-    })
-
-    it('debe redirigir a la página principal después de login exitoso', async () => {
+    it('debe iniciar sesión exitosamente cuando el backend responde 200', async () => {
       jest.useFakeTimers()
-      
+      const dispatchSpy = jest.spyOn(window, 'dispatchEvent')
       const usuario = {
         nombre: 'Test',
         correo: 'test@test.com',
-        usuario: 'testuser',
-        password: 'Password123!'
+        usuario: 'testuser'
       }
-      localStorage.setItem('usuarios', JSON.stringify([usuario]))
+      usuarioService.login.mockImplementation(async () => {
+        localStorage.setItem('usuarioLogeado', JSON.stringify(usuario))
+        return usuario
+      })
 
       renderWithRouter(<Login />)
-      
+
       fireEvent.change(screen.getByLabelText(/Usuario/i), { target: { value: 'testuser' } })
       fireEvent.change(screen.getByLabelText(/Correo electrónico/i), { target: { value: 'test@test.com' } })
       fireEvent.change(screen.getByLabelText(/Contraseña/i), { target: { value: 'Password123!' } })
-      
+
       const submitButton = screen.getByRole('button', { name: /Inicio Sesión/i })
       fireEvent.click(submitButton)
 
-      // Avanzar el tiempo para el setTimeout
+      await waitFor(() => {
+        expect(usuarioService.login).toHaveBeenCalledWith('testuser', 'test@test.com', 'Password123!')
+        expect(screen.getByText('¡Bienvenido Test!')).toBeInTheDocument()
+      })
+
       jest.advanceTimersByTime(1200)
 
       await waitFor(() => {
         expect(mockNavigate).toHaveBeenCalledWith('/')
+        expect(dispatchSpy).toHaveBeenCalled()
       })
 
+      dispatchSpy.mockRestore()
       jest.useRealTimers()
+    })
+
+    it('debe deshabilitar el botón mientras se envía la petición', async () => {
+      let resolver
+      usuarioService.login.mockReturnValue(new Promise(resolve => { resolver = resolve }))
+
+      renderWithRouter(<Login />)
+
+      fireEvent.change(screen.getByLabelText(/Usuario/i), { target: { value: 'testuser' } })
+      fireEvent.change(screen.getByLabelText(/Correo electrónico/i), { target: { value: 'test@test.com' } })
+      fireEvent.change(screen.getByLabelText(/Contraseña/i), { target: { value: 'Password123!' } })
+
+      const submitButton = screen.getByRole('button', { name: /Inicio Sesión/i })
+      fireEvent.click(submitButton)
+
+      expect(submitButton).toBeDisabled()
+
+      await act(async () => resolver({ nombre: 'Test' }))
+
+      await waitFor(() => {
+        expect(submitButton).not.toBeDisabled()
+      })
     })
   })
 
@@ -221,44 +201,4 @@ describe('Login Component', () => {
     })
   })
 
-  describe('Integración con localStorage', () => {
-    it('debe leer usuarios desde localStorage', async () => {
-      const usuarios = [
-        { correo: 'user1@test.com', usuario: 'user1', password: 'Pass1!' },
-        { correo: 'user2@test.com', usuario: 'user2', password: 'Pass2!' }
-      ]
-      localStorage.setItem('usuarios', JSON.stringify(usuarios))
-
-      renderWithRouter(<Login />)
-      
-      // Intentar login con el segundo usuario
-      fireEvent.change(screen.getByLabelText(/Usuario/i), { target: { value: 'user2' } })
-      fireEvent.change(screen.getByLabelText(/Correo electrónico/i), { target: { value: 'user2@test.com' } })
-      fireEvent.change(screen.getByLabelText(/Contraseña/i), { target: { value: 'Pass2!' } })
-      
-      const submitButton = screen.getByRole('button', { name: /Inicio Sesión/i })
-      fireEvent.click(submitButton)
-
-      await waitFor(() => {
-        expect(screen.getByText('¡Inicio de sesión exitoso!')).toBeInTheDocument()
-      })
-    })
-
-    it('debe manejar localStorage vacío', async () => {
-      localStorage.removeItem('usuarios')
-
-      renderWithRouter(<Login />)
-      
-      fireEvent.change(screen.getByLabelText(/Usuario/i), { target: { value: 'usuario' } })
-      fireEvent.change(screen.getByLabelText(/Correo electrónico/i), { target: { value: 'test@test.com' } })
-      fireEvent.change(screen.getByLabelText(/Contraseña/i), { target: { value: 'password' } })
-      
-      const submitButton = screen.getByRole('button', { name: /Inicio Sesión/i })
-      fireEvent.click(submitButton)
-
-      await waitFor(() => {
-        expect(screen.getByText('Correo, usuario o contraseña incorrectos.')).toBeInTheDocument()
-      })
-    })
-  })
 })
